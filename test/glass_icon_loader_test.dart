@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -41,15 +42,18 @@ void main() {
       expect(bytes[1], 0x50);
     });
 
-    test('resolveImageBytes prioritizes raw imageBytes when provided', () async {
-      final Uint8List dummyBytes = Uint8List.fromList([1, 2, 3, 4]);
-      final Uint8List? result = await GlassIconLoader.resolveImageBytes(
-        imageBytes: dummyBytes,
-        icon: Icons.search,
-      );
+    test(
+      'resolveImageBytes prioritizes raw imageBytes when provided',
+      () async {
+        final Uint8List dummyBytes = Uint8List.fromList([1, 2, 3, 4]);
+        final Uint8List? result = await GlassIconLoader.resolveImageBytes(
+          imageBytes: dummyBytes,
+          icon: Icons.search,
+        );
 
-      expect(result, equals(dummyBytes));
-    });
+        expect(result, equals(dummyBytes));
+      },
+    );
 
     test('resolveImageBytes resolves IconData when provided', () async {
       final Uint8List? result = await GlassIconLoader.resolveImageBytes(
@@ -59,42 +63,69 @@ void main() {
       expect(result, isNotNull);
       expect(result![0], 0x89);
     });
-  });
 
-  group('NativeLiquidGlassNavBarItem and NativeLiquidGlassActionButton models', () {
-    test('Constructs NativeLiquidGlassNavBarItem with svgPath', () {
-      const item = NativeLiquidGlassNavBarItem(
-        label: 'Home',
-        svgPath: 'assets/icons/home.svg',
-      );
-      expect(item.label, 'Home');
-      expect(item.svgPath, 'assets/icons/home.svg');
-    });
+    test('Generates PNG icon assets for example app', () async {
+      final Map<String, IconData> icons = {
+        'home.png': Icons.home_rounded,
+        'search.png': Icons.search_rounded,
+        'heart.png': Icons.favorite_rounded,
+        'settings.png': Icons.settings_rounded,
+        'plus.png': Icons.add_rounded,
+      };
 
-    test('Constructs NativeLiquidGlassNavBarItem with assetPath', () {
-      const item = NativeLiquidGlassNavBarItem(
-        label: 'Search',
-        assetPath: 'assets/icons/search.png',
-      );
-      expect(item.label, 'Search');
-      expect(item.assetPath, 'assets/icons/search.png');
-    });
-
-    test('Constructs NativeLiquidGlassNavBarItem with IconData', () {
-      const item = NativeLiquidGlassNavBarItem(
-        label: 'Settings',
-        icon: Icons.settings,
-      );
-      expect(item.label, 'Settings');
-      expect(item.icon, Icons.settings);
-    });
-
-    test('Constructs NativeLiquidGlassActionButton with svgPath', () {
-      final button = NativeLiquidGlassActionButton(
-        svgPath: 'assets/icons/plus.svg',
-        onTap: () {},
-      );
-      expect(button.svgPath, 'assets/icons/plus.svg');
+      for (final entry in icons.entries) {
+        final bytes = await GlassIconLoader.rasterizeIconData(
+          entry.value,
+          targetSize: 28.0,
+          pixelRatio: 3.0,
+        );
+        expect(bytes, isNotNull);
+        final file = File(
+          '/Users/wajid/Desktop/native_glass_navbar-main/example/assets/icons/${entry.key}',
+        );
+        await file.writeAsBytes(bytes!);
+        expect(await file.exists(), isTrue);
+      }
     });
   });
+
+  group(
+    'NativeLiquidGlassNavBarItem and NativeLiquidGlassActionButton models',
+    () {
+      test('Constructs NativeLiquidGlassNavBarItem with svgPath', () {
+        const item = NativeLiquidGlassNavBarItem(
+          label: 'Home',
+          svgPath: 'assets/icons/home.svg',
+        );
+        expect(item.label, 'Home');
+        expect(item.svgPath, 'assets/icons/home.svg');
+      });
+
+      test('Constructs NativeLiquidGlassNavBarItem with assetPath', () {
+        const item = NativeLiquidGlassNavBarItem(
+          label: 'Search',
+          assetPath: 'assets/icons/search.png',
+        );
+        expect(item.label, 'Search');
+        expect(item.assetPath, 'assets/icons/search.png');
+      });
+
+      test('Constructs NativeLiquidGlassNavBarItem with IconData', () {
+        const item = NativeLiquidGlassNavBarItem(
+          label: 'Settings',
+          icon: Icons.settings,
+        );
+        expect(item.label, 'Settings');
+        expect(item.icon, Icons.settings);
+      });
+
+      test('Constructs NativeLiquidGlassActionButton with svgPath', () {
+        final button = NativeLiquidGlassActionButton(
+          svgPath: 'assets/icons/plus.svg',
+          onTap: () {},
+        );
+        expect(button.svgPath, 'assets/icons/plus.svg');
+      });
+    },
+  );
 }

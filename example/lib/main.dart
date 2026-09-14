@@ -7,7 +7,7 @@ void main() {
 
 enum BackgroundStyle { vibrantMesh, auroraGlow, minimalSolid }
 
-enum IconSourceMode { svgs, iconData, symbols }
+enum IconSourceMode { svgs, pngs, iconData, symbols }
 
 class LiquidGlassApp extends StatefulWidget {
   const LiquidGlassApp({super.key});
@@ -225,6 +225,26 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
             svgPath: 'assets/icons/settings.svg',
           ),
         ];
+      case IconSourceMode.pngs:
+        // Bundled PNG Image Assets
+        return const [
+          NativeLiquidGlassNavBarItem(
+            label: 'Home',
+            assetPath: 'assets/icons/home.png',
+          ),
+          NativeLiquidGlassNavBarItem(
+            label: 'Search',
+            assetPath: 'assets/icons/search.png',
+          ),
+          NativeLiquidGlassNavBarItem(
+            label: 'Saved',
+            assetPath: 'assets/icons/heart.png',
+          ),
+          NativeLiquidGlassNavBarItem(
+            label: 'Settings',
+            assetPath: 'assets/icons/settings.png',
+          ),
+        ];
       case IconSourceMode.iconData:
         return const [
           NativeLiquidGlassNavBarItem(label: 'Home', icon: Icons.home_rounded),
@@ -262,6 +282,11 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
       case IconSourceMode.svgs:
         return NativeLiquidGlassActionButton(
           svgPath: 'assets/icons/plus.svg',
+          onTap: _openCreateModal,
+        );
+      case IconSourceMode.pngs:
+        return NativeLiquidGlassActionButton(
+          assetPath: 'assets/icons/plus.png',
           onTap: _openCreateModal,
         );
       case IconSourceMode.iconData:
@@ -695,17 +720,22 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                         segments: const [
                           ButtonSegment(
                             value: IconSourceMode.svgs,
-                            label: Text('SVGs (Default)'),
+                            label: Text('SVGs'),
                             icon: Icon(Icons.brush_rounded),
                           ),
                           ButtonSegment(
+                            value: IconSourceMode.pngs,
+                            label: Text('PNGs'),
+                            icon: Icon(Icons.image_rounded),
+                          ),
+                          ButtonSegment(
                             value: IconSourceMode.iconData,
-                            label: Text('IconData'),
+                            label: Text('Icons'),
                             icon: Icon(Icons.widgets_rounded),
                           ),
                           ButtonSegment(
                             value: IconSourceMode.symbols,
-                            label: Text('SF Symbols'),
+                            label: Text('Symbols'),
                             icon: Icon(Icons.apple),
                           ),
                         ],

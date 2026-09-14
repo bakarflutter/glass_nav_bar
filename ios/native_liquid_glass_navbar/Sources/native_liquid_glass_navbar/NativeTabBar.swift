@@ -155,6 +155,23 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		self.view.backgroundColor = .clear
+
+		// Manage overflow, truncation, and spacing for all tab item labels
+		for subview in tabBar.subviews {
+			if let control = subview as? UIControl {
+				control.clipsToBounds = true
+				for child in control.subviews {
+					if let label = child as? UILabel {
+						label.lineBreakMode = .byTruncatingTail
+						label.numberOfLines = 1
+						label.adjustsFontSizeToFitWidth = true
+						label.minimumScaleFactor = 0.85
+						label.textAlignment = .center
+						label.clipsToBounds = true
+					}
+				}
+			}
+		}
 	}
 
 	private func configureAppearance() {
@@ -169,13 +186,19 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		itemAppearance.normal.iconColor = unselectedColor
 		itemAppearance.selected.iconColor = config.tintColor
 
+		let paragraphStyle = NSMutableParagraphStyle()
+		paragraphStyle.alignment = .center
+		paragraphStyle.lineBreakMode = .byTruncatingTail
+
 		let normalAttributes: [NSAttributedString.Key: Any] = [
 			.font: UIFont.systemFont(ofSize: config.fontSize, weight: .medium),
-			.foregroundColor: unselectedColor
+			.foregroundColor: unselectedColor,
+			.paragraphStyle: paragraphStyle
 		]
 		let selectedAttributes: [NSAttributedString.Key: Any] = [
 			.font: UIFont.systemFont(ofSize: config.fontSize, weight: .medium),
-			.foregroundColor: config.tintColor
+			.foregroundColor: config.tintColor,
+			.paragraphStyle: paragraphStyle
 		]
 
 		itemAppearance.normal.titleTextAttributes = normalAttributes

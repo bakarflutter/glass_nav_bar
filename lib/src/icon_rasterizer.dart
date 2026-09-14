@@ -107,7 +107,7 @@ class GlassIconLoader {
       final ui.PictureRecorder recorder = ui.PictureRecorder();
       final ui.Canvas canvas = ui.Canvas(recorder);
 
-      final double fontSize = dimension * 0.75;
+      final double fontSize = dimension * 0.92;
       final TextPainter textPainter = TextPainter(
         textDirection: TextDirection.ltr,
         text: TextSpan(
@@ -128,7 +128,7 @@ class GlassIconLoader {
         canvas,
         Offset(
           (dimension - textPainter.width) / 2,
-          (dimension - textPainter.height) / 2 - (dimension * 0.04),
+          (dimension - textPainter.height) / 2,
         ),
       );
 
@@ -197,8 +197,8 @@ class GlassIconLoader {
       final double originalHeight =
           pictureInfo.size.height > 0 ? pictureInfo.size.height : targetHeight;
 
-      final double targetDrawableWidth = width * 0.82;
-      final double targetDrawableHeight = height * 0.82;
+      final double targetDrawableWidth = width * 0.94;
+      final double targetDrawableHeight = height * 0.94;
 
       // Maintain uniform aspect ratio
       final double scale = math.min(
@@ -209,10 +209,9 @@ class GlassIconLoader {
       final double scaledWidth = originalWidth * scale;
       final double scaledHeight = originalHeight * scale;
 
-      // Center the scaled icon within the canvas with slight top lift
+      // Center the scaled icon within the canvas
       final double offsetX = (width - scaledWidth) / 2;
-      final double offsetY =
-          (height - scaledHeight) / 2 - (height * 0.04);
+      final double offsetY = (height - scaledHeight) / 2;
 
       canvas.save();
       canvas.translate(offsetX, offsetY);

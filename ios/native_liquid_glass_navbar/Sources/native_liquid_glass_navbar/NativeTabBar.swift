@@ -334,13 +334,7 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		format.scale = UIScreen.main.scale
 		let renderer = UIGraphicsImageRenderer(size: targetSize, format: format)
 		return renderer.image { _ in
-			let insetRect = CGRect(
-				x: targetSize.width * 0.09,
-				y: targetSize.height * 0.04,
-				width: targetSize.width * 0.82,
-				height: targetSize.height * 0.82
-			)
-			image.draw(in: insetRect)
+			image.draw(in: CGRect(origin: .zero, size: targetSize))
 		}
 	}
 

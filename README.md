@@ -1,4 +1,4 @@
-# liquid_glass_navbar
+# native_liquid_glass_navbar
 
 A high-performance Flutter plugin that brings the authentic iOS **Liquid Glass** navigation bar to Flutter apps with full support for **custom SVGs**, **PNG/raster images**, **Flutter IconData**, and **Apple SF Symbols**.
 
@@ -22,18 +22,18 @@ This package uses [platform views and method channels](https://docs.flutter.dev/
 - 💎 **Authentic Liquid Glass Blur**: Genuine native iOS translucency and blur styling with zero frame drops.
 - 🌓 **Theming & Dark Mode**: Automatically adapts to system brightness and your app's `ThemeData` primary and tint colors.
 - 🔘 **Action Button**: Add a prominent circular action button to the right of the tabs for central app actions (e.g. Create / Post / Add).
-- 📱 **Cross-Platform Fallback**: Optionally define a Flutter fallback widget (e.g. `NavigationBar` or `BottomNavigationBar`) for Android and older iOS versions.
+- 📱 **Cross-Platform Fallback**: Automatically provides a built-in cross-platform navigation bar or accepts a custom `fallback` widget for Android, Web, and older iOS versions.
 - ⚡ **High-Performance In-Memory Cache**: Icons are rasterized at high retina resolution (@3x) and cached in memory for instantaneous 60/120 FPS transitions.
 
 ---
 
 ## Installation
 
-Add `liquid_glass_navbar` to your `pubspec.yaml`:
+Add `native_liquid_glass_navbar` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquid_glass_navbar: ^1.1.0
+  native_liquid_glass_navbar: ^1.0.0
 ```
 
 Run `flutter pub get`.
@@ -45,7 +45,7 @@ Run `flutter pub get`.
 Import the package:
 
 ```dart
-import 'package:liquid_glass_navbar/liquid_glass_navbar.dart';
+import 'package:native_liquid_glass_navbar/native_liquid_glass_navbar.dart';
 ```
 
 ### 1. Using Custom SVG Icons
@@ -61,7 +61,7 @@ flutter:
 Then create your navigation bar:
 
 ```dart
-LiquidGlassNavBar(
+NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) {
     setState(() {
@@ -69,15 +69,15 @@ LiquidGlassNavBar(
     });
   },
   tabs: const [
-    LiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem(
       label: 'Home',
       svgPath: 'assets/icons/home.svg',
     ),
-    LiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem(
       label: 'Search',
       svgPath: 'assets/icons/search.svg',
     ),
-    LiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem(
       label: 'Settings',
       svgPath: 'assets/icons/settings.svg',
     ),
@@ -92,19 +92,19 @@ LiquidGlassNavBar(
 You can mix and match custom SVGs, PNGs, and Flutter `IconData`:
 
 ```dart
-LiquidGlassNavBar(
+NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
   tabs: const [
-    LiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem(
       label: 'Home',
       svgPath: 'assets/icons/home.svg',
     ),
-    LiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem(
       label: 'Profile',
       assetPath: 'assets/icons/profile.png',
     ),
-    LiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem(
       label: 'Settings',
       icon: Icons.settings_rounded,
     ),
@@ -119,21 +119,21 @@ LiquidGlassNavBar(
 You can add an action button (e.g., for creating a new post or item). When an action button is present, the maximum number of tabs is 4 (for a total of 5 items including the action button).
 
 ```dart
-LiquidGlassNavBar(
+NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
-  actionButton: LiquidGlassActionButton(
+  actionButton: NativeLiquidGlassActionButton(
     svgPath: 'assets/icons/plus.svg',
     onTap: () {
       print('Action button tapped!');
     },
   ),
   tabs: const [
-    LiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem(
       label: 'Home',
       svgPath: 'assets/icons/home.svg',
     ),
-    LiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem(
       label: 'Search',
       svgPath: 'assets/icons/search.svg',
     ),
@@ -145,15 +145,15 @@ LiquidGlassNavBar(
 
 ### 4. Cross-Platform Fallback (Android & Older iOS)
 
-Since this plugin utilizes native iOS Liquid Glass APIs, provide a `fallback` widget (such as Flutter's standard `NavigationBar`) for Android or older devices:
+Since this plugin utilizes native iOS Liquid Glass APIs, on Android or unsupported platforms it will automatically render a built-in fallback navigation bar, or you can provide a custom `fallback` widget:
 
 ```dart
-LiquidGlassNavBar(
+NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
   tabs: const [
-    LiquidGlassNavBarItem(label: 'Home', svgPath: 'assets/icons/home.svg'),
-    LiquidGlassNavBarItem(label: 'Settings', icon: Icons.settings),
+    NativeLiquidGlassNavBarItem(label: 'Home', svgPath: 'assets/icons/home.svg'),
+    NativeLiquidGlassNavBarItem(label: 'Settings', icon: Icons.settings),
   ],
   fallback: NavigationBar(
     selectedIndex: _currentIndex,
@@ -170,20 +170,20 @@ LiquidGlassNavBar(
 
 ## API Reference
 
-### `LiquidGlassNavBar`
+### `NativeLiquidGlassNavBar`
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
-| `tabs` | `List<LiquidGlassNavBarItem>` | List of tabs to display. Maximum 5 (or 4 when `actionButton` is provided). |
+| `tabs` | `List<NativeLiquidGlassNavBarItem>` | List of tabs to display. Maximum 5 (or 4 when `actionButton` is provided). |
 | `currentIndex` | `int` | The zero-based index of the currently active tab. |
 | `onTap` | `ValueChanged<int>` | Callback triggered when a tab is tapped. |
-| `actionButton` | `LiquidGlassActionButton?` | Optional circular action button floating to the right of the tabs. |
+| `actionButton` | `NativeLiquidGlassActionButton?` | Optional circular action button floating to the right of the tabs. |
 | `tintColor` | `Color?` | Custom tint color for active tab and icons. Defaults to `Theme.of(context).colorScheme.primary`. |
-| `fallback` | `Widget?` | Widget to display on non-iOS or unsupported devices. |
+| `fallback` | `Widget?` | Optional widget to display on non-iOS or unsupported devices (automatic fallback provided by default). |
 
 ---
 
-### `LiquidGlassNavBarItem`
+### `NativeLiquidGlassNavBarItem`
 
 Provide at least **one** icon source (`svgPath`, `assetPath`, `icon`, `svgString`, `imageBytes`, or `symbol`).
 
@@ -199,7 +199,7 @@ Provide at least **one** icon source (`svgPath`, `assetPath`, `icon`, `svgString
 
 ---
 
-### `LiquidGlassActionButton`
+### `NativeLiquidGlassActionButton`
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
@@ -210,28 +210,6 @@ Provide at least **one** icon source (`svgPath`, `assetPath`, `icon`, `svgString
 | `svgString` | `String?` | Raw SVG XML string. |
 | `imageBytes` | `Uint8List?` | Raw PNG byte buffer. |
 | `symbol` | `String?` | Apple SF Symbol name or native asset name. |
-
----
-
-## Publishing Checklist for Pub.dev
-
-When publishing your own version to [pub.dev](https://pub.dev):
-
-1. **Configure `pubspec.yaml`**: Update `homepage`, `repository`, and `issue_tracker` with your GitHub repo.
-2. **Update `LICENSE`**: Replace with your name and year.
-3. **Run Static Analysis & Tests**:
-   ```bash
-   flutter analyze
-   flutter test
-   ```
-4. **Publish Dry Run**:
-   ```bash
-   dart pub publish --dry-run
-   ```
-5. **Publish**:
-   ```bash
-   dart pub publish
-   ```
 
 ---
 

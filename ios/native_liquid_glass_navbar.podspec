@@ -1,10 +1,10 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint liquid_glass_navbar.podspec` to validate before publishing.
+# Run `pod lib lint native_liquid_glass_navbar.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'liquid_glass_navbar'
-  s.version          = '1.1.0'
+  s.name             = 'native_liquid_glass_navbar'
+  s.version          = '1.0.0'
   s.summary          = 'A Flutter plugin that brings the native iOS Liquid Glass style navigation bar to your Flutter apps with custom SVG, PNG, and icon support.'
   s.description      = <<-DESC
 A Flutter plugin that brings the native iOS Liquid Glass style navigation bar to your Flutter apps with custom SVG, PNG, and icon support.
@@ -13,7 +13,7 @@ A Flutter plugin that brings the native iOS Liquid Glass style navigation bar to
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Abou Bakar' => 'ab.dev.pk@gmail.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'liquid_glass_navbar/Sources/liquid_glass_navbar/**/*.swift'
+  s.source_files = 'native_liquid_glass_navbar/Sources/native_liquid_glass_navbar/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '13.0'
 
@@ -23,5 +23,5 @@ A Flutter plugin that brings the native iOS Liquid Glass style navigation bar to
 
   # Privacy manifest, shared with the Swift Package Manager target.
   # See https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
-  s.resource_bundles = {'liquid_glass_navbar_privacy' => ['liquid_glass_navbar/Sources/liquid_glass_navbar/PrivacyInfo.xcprivacy']}
+  s.resource_bundles = {'native_liquid_glass_navbar_privacy' => ['native_liquid_glass_navbar/Sources/native_liquid_glass_navbar/PrivacyInfo.xcprivacy']}
 end

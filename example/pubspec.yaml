@@ -1,5 +1,5 @@
-name: liquid_glass_navbar_example
-description: "Demonstrates how to use the liquid_glass_navbar plugin with custom SVGs, PNGs, and IconData."
+name: native_liquid_glass_navbar_example
+description: "Demonstrates how to use the native_liquid_glass_navbar plugin with custom SVGs, PNGs, and IconData."
 publish_to: 'none'
 
 environment:
@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  liquid_glass_navbar:
+  native_liquid_glass_navbar:
     path: ../
 
   cupertino_icons: ^1.0.8

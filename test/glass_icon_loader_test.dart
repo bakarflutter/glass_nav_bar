@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:liquid_glass_navbar/liquid_glass_navbar.dart';
+import 'package:native_liquid_glass_navbar/native_liquid_glass_navbar.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -61,9 +61,9 @@ void main() {
     });
   });
 
-  group('LiquidGlassNavBarItem and LiquidGlassActionButton models', () {
-    test('Constructs LiquidGlassNavBarItem with svgPath', () {
-      const item = LiquidGlassNavBarItem(
+  group('NativeLiquidGlassNavBarItem and NativeLiquidGlassActionButton models', () {
+    test('Constructs NativeLiquidGlassNavBarItem with svgPath', () {
+      const item = NativeLiquidGlassNavBarItem(
         label: 'Home',
         svgPath: 'assets/icons/home.svg',
       );
@@ -71,8 +71,8 @@ void main() {
       expect(item.svgPath, 'assets/icons/home.svg');
     });
 
-    test('Constructs LiquidGlassNavBarItem with assetPath', () {
-      const item = LiquidGlassNavBarItem(
+    test('Constructs NativeLiquidGlassNavBarItem with assetPath', () {
+      const item = NativeLiquidGlassNavBarItem(
         label: 'Search',
         assetPath: 'assets/icons/search.png',
       );
@@ -80,8 +80,8 @@ void main() {
       expect(item.assetPath, 'assets/icons/search.png');
     });
 
-    test('Constructs LiquidGlassNavBarItem with IconData', () {
-      const item = LiquidGlassNavBarItem(
+    test('Constructs NativeLiquidGlassNavBarItem with IconData', () {
+      const item = NativeLiquidGlassNavBarItem(
         label: 'Settings',
         icon: Icons.settings,
       );
@@ -89,8 +89,8 @@ void main() {
       expect(item.icon, Icons.settings);
     });
 
-    test('Constructs LiquidGlassActionButton with svgPath', () {
-      final button = LiquidGlassActionButton(
+    test('Constructs NativeLiquidGlassActionButton with svgPath', () {
+      final button = NativeLiquidGlassActionButton(
         svgPath: 'assets/icons/plus.svg',
         onTap: () {},
       );

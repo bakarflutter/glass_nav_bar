@@ -2,26 +2,26 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - liquid_glass_navbar (1.1.0):
+  - native_liquid_glass_navbar (1.0.0):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
-  - liquid_glass_navbar (from `.symlinks/plugins/liquid_glass_navbar/ios`)
+  - native_liquid_glass_navbar (from `.symlinks/plugins/native_liquid_glass_navbar/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
-  liquid_glass_navbar:
-    :path: ".symlinks/plugins/liquid_glass_navbar/ios"
+  native_liquid_glass_navbar:
+    :path: ".symlinks/plugins/native_liquid_glass_navbar/ios"
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  liquid_glass_navbar: 9a893f9693cd7ba3e4a7a2a730199dfe443516d4
+  native_liquid_glass_navbar: e28eb1f53a6f600b35eb6bb5c74af760b2518653
 
 PODFILE CHECKSUM: d5619f92bde1b6b57393e8c11769682e26fb64a3
 

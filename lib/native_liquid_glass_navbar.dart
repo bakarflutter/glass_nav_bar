@@ -8,11 +8,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:liquid_glass_navbar/liquid_glass_helper.dart';
-import 'package:liquid_glass_navbar/src/icon_rasterizer.dart';
+import 'package:native_liquid_glass_navbar/liquid_glass_helper.dart';
+import 'package:native_liquid_glass_navbar/src/icon_rasterizer.dart';
 
-/// Represents a tab item in the [LiquidGlassNavBar].
-class LiquidGlassNavBarItem {
+/// Represents a tab item in the [NativeLiquidGlassNavBar].
+class NativeLiquidGlassNavBarItem {
   /// The label text to display for the tab.
   final String label;
 
@@ -34,11 +34,11 @@ class LiquidGlassNavBarItem {
   /// The SF Symbol name or iOS asset catalog name (e.g., 'house', 'gear').
   final String? symbol;
 
-  /// Creates a new [LiquidGlassNavBarItem].
+  /// Creates a new [NativeLiquidGlassNavBarItem].
   ///
   /// Provide at least one icon source: [svgPath], [assetPath], [icon], [svgString],
   /// [imageBytes], or [symbol].
-  const LiquidGlassNavBarItem({
+  const NativeLiquidGlassNavBarItem({
     required this.label,
     this.svgPath,
     this.assetPath,
@@ -57,13 +57,16 @@ class LiquidGlassNavBarItem {
        );
 }
 
-/// Backwards compatibility alias for [LiquidGlassNavBarItem].
-typedef NativeGlassNavBarItem = LiquidGlassNavBarItem;
+/// Backwards compatibility alias for [NativeLiquidGlassNavBarItem].
+typedef LiquidGlassNavBarItem = NativeLiquidGlassNavBarItem;
 
-/// Represents an action button in the [LiquidGlassNavBar].
+/// Backwards compatibility alias for [NativeLiquidGlassNavBarItem].
+typedef NativeGlassNavBarItem = NativeLiquidGlassNavBarItem;
+
+/// Represents an action button in the [NativeLiquidGlassNavBar].
 ///
 /// It appears to the right of the tab as a circular floating button.
-class LiquidGlassActionButton {
+class NativeLiquidGlassActionButton {
   /// The Flutter asset path for a custom SVG icon (e.g., 'assets/icons/plus.svg').
   final String? svgPath;
 
@@ -85,11 +88,11 @@ class LiquidGlassActionButton {
   /// The callback to be invoked when the action button is tapped.
   final VoidCallback onTap;
 
-  /// Creates a new [LiquidGlassActionButton].
+  /// Creates a new [NativeLiquidGlassActionButton].
   ///
   /// Provide at least one icon source: [svgPath], [assetPath], [icon], [svgString],
   /// [imageBytes], or [symbol].
-  const LiquidGlassActionButton({
+  const NativeLiquidGlassActionButton({
     this.svgPath,
     this.assetPath,
     this.icon,
@@ -108,23 +111,26 @@ class LiquidGlassActionButton {
        );
 }
 
-/// Backwards compatibility alias for [LiquidGlassActionButton].
-typedef TabBarActionButton = LiquidGlassActionButton;
+/// Backwards compatibility alias for [NativeLiquidGlassActionButton].
+typedef LiquidGlassActionButton = NativeLiquidGlassActionButton;
+
+/// Backwards compatibility alias for [NativeLiquidGlassActionButton].
+typedef TabBarActionButton = NativeLiquidGlassActionButton;
 
 /// A widget that displays a native glass liquid navigation bar on iOS.
 ///
 /// On non-iOS platforms or when the glass effect is not supported,
 /// it displays a custom [fallback] widget or an automatic built-in navigation fallback.
-class LiquidGlassNavBar extends StatefulWidget {
+class NativeLiquidGlassNavBar extends StatefulWidget {
   /// The list of tabs to display in the navigation bar.
   ///
   /// If [actionButton] is provided, supports up to 4 tabs, else supports up to 5 tabs.
-  final List<LiquidGlassNavBarItem> tabs;
+  final List<NativeLiquidGlassNavBarItem> tabs;
 
   /// An optional action button.
   ///
   /// If provided, the action button appears to the right of the tabs as a circular floating button.
-  final LiquidGlassActionButton? actionButton;
+  final NativeLiquidGlassActionButton? actionButton;
 
   /// The index of the currently selected tab.
   final int currentIndex;
@@ -141,8 +147,8 @@ class LiquidGlassNavBar extends StatefulWidget {
   /// If null, a built-in cross-platform navigation bar will be rendered automatically.
   final Widget? fallback;
 
-  /// Creates a new [LiquidGlassNavBar].
-  const LiquidGlassNavBar({
+  /// Creates a new [NativeLiquidGlassNavBar].
+  const NativeLiquidGlassNavBar({
     super.key,
     required this.tabs,
     this.actionButton,
@@ -153,18 +159,21 @@ class LiquidGlassNavBar extends StatefulWidget {
   }) : assert(
          tabs.length <= (actionButton == null ? 5 : 4),
          actionButton == null
-             ? 'LiquidGlassNavBar supports a maximum of 5 tabs.'
-             : 'LiquidGlassNavBar with an action button supports a maximum of 4 tabs.',
+             ? 'NativeLiquidGlassNavBar supports a maximum of 5 tabs.'
+             : 'NativeLiquidGlassNavBar with an action button supports a maximum of 4 tabs.',
        );
 
   @override
-  State<LiquidGlassNavBar> createState() => _LiquidGlassNavBarState();
+  State<NativeLiquidGlassNavBar> createState() => _NativeLiquidGlassNavBarState();
 }
 
-/// Backwards compatibility alias for [LiquidGlassNavBar].
-typedef NativeGlassNavBar = LiquidGlassNavBar;
+/// Backwards compatibility alias for [NativeLiquidGlassNavBar].
+typedef LiquidGlassNavBar = NativeLiquidGlassNavBar;
 
-class _LiquidGlassNavBarState extends State<LiquidGlassNavBar> {
+/// Backwards compatibility alias for [NativeLiquidGlassNavBar].
+typedef NativeGlassNavBar = NativeLiquidGlassNavBar;
+
+class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
   MethodChannel? _channel;
   late Future<bool> _initFuture;
   List<Uint8List?> _tabImages = [];
@@ -191,8 +200,8 @@ class _LiquidGlassNavBarState extends State<LiquidGlassNavBar> {
           icon: tab.icon,
           svgString: tab.svgString,
           imageBytes: tab.imageBytes,
-          targetWidth: 22.0,
-          targetHeight: 22.0,
+          targetWidth: 24.0,
+          targetHeight: 24.0,
         ),
       ),
     );
@@ -242,7 +251,7 @@ class _LiquidGlassNavBarState extends State<LiquidGlassNavBar> {
   }
 
   @override
-  void didUpdateWidget(LiquidGlassNavBar oldWidget) {
+  void didUpdateWidget(NativeLiquidGlassNavBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     _loadImages().then((_) {
       if (mounted) {

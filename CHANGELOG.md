@@ -1,3 +1,8 @@
+## 1.0.2
+
+- **Label Overflow & Auto-Fitting**: Automatic horizontal spacing, boundary clipping, and tail truncation (`...`) preventing long text overlapping adjacent tabs.
+- **Enhanced Author & Documentation**: Highlighting maintainer details and usage patterns.
+
 ## 1.0.1
 
 - **Easy Named Constructors**: Added `.svg()`, `.icon()`, `.asset()`, and `.symbol()` constructors to `NativeLiquidGlassNavBarItem` and `NativeLiquidGlassActionButton`.

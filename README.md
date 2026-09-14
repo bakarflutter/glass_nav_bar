@@ -214,13 +214,20 @@ Provide at least **one** icon source (`svgPath`, `assetPath`, `icon`, `svgString
 
 ---
 
-## Author
+## 👨‍💻 Author & Maintainer
 
-**Abou Bakar**  
-📧 Email: [ab.dev.pk@gmail.com](mailto:ab.dev.pk@gmail.com)
+<div align="center">
+
+### **Abou Bakar**
+*Flutter Developer & Open-Source Creator*
+
+[![GitHub](https://img.shields.io/badge/GitHub-bakarflutter-181717?style=for-the-badge&logo=github)](https://github.com/bakarflutter)
+[![Email](https://img.shields.io/badge/Email-ab.dev.pk%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ab.dev.pk@gmail.com)
+
+</div>
 
 ---
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

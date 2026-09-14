@@ -1,9 +1,9 @@
 name: liquid_glass_navbar
 description: "A high-performance Flutter plugin bringing the native iOS Liquid Glass navigation bar to Flutter apps with custom SVGs, PNGs, and IconData."
 version: 1.1.0
-homepage: "https://github.com/TechSupportz/liquid_glass_navbar"
-repository: "https://github.com/TechSupportz/liquid_glass_navbar"
-issue_tracker: "https://github.com/TechSupportz/liquid_glass_navbar/issues"
+homepage: "https://github.com/bakarflutter/glass_nav_bar"
+repository: "https://github.com/bakarflutter/glass_nav_bar"
+issue_tracker: "https://github.com/bakarflutter/glass_nav_bar/issues"
 
 environment:
     sdk: ^3.9.2

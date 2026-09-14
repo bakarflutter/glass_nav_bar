@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 A Flutter plugin that brings the native iOS Liquid Glass style navigation bar to your Flutter apps with custom SVG, PNG, and icon support.
                        DESC
-  s.homepage         = 'https://github.com/TechSupportz/liquid_glass_navbar'
+  s.homepage         = 'https://github.com/bakarflutter/glass_nav_bar'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Abou Bakar' => 'ab.dev.pk@gmail.com' }
   s.source           = { :path => '.' }

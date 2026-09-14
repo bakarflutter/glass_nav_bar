@@ -4,6 +4,7 @@ library;
 export 'liquid_glass_helper.dart';
 export 'src/icon_rasterizer.dart';
 
+import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -288,52 +289,260 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
     });
   }
 
+  Widget _buildTabIconWidget({
+    required NativeLiquidGlassNavBarItem tab,
+    required Color color,
+    required double size,
+  }) {
+    if (tab.icon != null) {
+      return Icon(tab.icon, size: size, color: color);
+    } else if (tab.svgPath != null) {
+      return SvgPicture.asset(
+        tab.svgPath!,
+        width: size,
+        height: size,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else if (tab.svgString != null) {
+      return SvgPicture.string(
+        tab.svgString!,
+        width: size,
+        height: size,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else if (tab.assetPath != null) {
+      return Image.asset(tab.assetPath!, width: size, height: size);
+    } else if (tab.imageBytes != null) {
+      return Image.memory(tab.imageBytes!, width: size, height: size);
+    } else {
+      return Icon(Icons.circle, size: size * 0.7, color: color);
+    }
+  }
+
+  Widget _buildActionIconWidget({
+    required NativeLiquidGlassActionButton actionButton,
+    required Color color,
+    required double size,
+  }) {
+    if (actionButton.icon != null) {
+      return Icon(actionButton.icon, size: size, color: color);
+    } else if (actionButton.svgPath != null) {
+      return SvgPicture.asset(
+        actionButton.svgPath!,
+        width: size,
+        height: size,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else if (actionButton.svgString != null) {
+      return SvgPicture.string(
+        actionButton.svgString!,
+        width: size,
+        height: size,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else if (actionButton.assetPath != null) {
+      return Image.asset(actionButton.assetPath!, width: size, height: size);
+    } else if (actionButton.imageBytes != null) {
+      return Image.memory(actionButton.imageBytes!, width: size, height: size);
+    } else {
+      return Icon(Icons.add, size: size, color: color);
+    }
+  }
+
   Widget _buildDefaultFallback(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final bool isDark = theme.brightness == Brightness.dark;
     final Color selectedColor =
-        widget.tintColor ?? Theme.of(context).colorScheme.primary;
+        widget.tintColor ?? theme.colorScheme.primary;
     final Color unselectedColor =
-        widget.unselectedColor ?? Theme.of(context).colorScheme.onSurfaceVariant;
-    final double iconSize = widget.iconSize ?? 24.0;
+        widget.unselectedColor ?? (isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93));
+    final double defaultIconSize = widget.iconSize ?? 26.0;
+    final double defaultFontSize = widget.fontSize ?? 12.0;
 
-    return NavigationBar(
-      selectedIndex: widget.currentIndex.clamp(0, widget.tabs.length - 1),
-      onDestinationSelected: widget.onTap,
-      indicatorColor: selectedColor.withValues(alpha: 0.15),
-      destinations: widget.tabs.map((tab) {
-        final double tabSize = tab.iconSize ?? iconSize;
+    final int totalTabs = widget.tabs.length;
+    final int safeIndex = widget.currentIndex.clamp(0, totalTabs - 1);
+    final double alignmentX = totalTabs <= 1
+        ? 0.0
+        : -1.0 + (safeIndex / (totalTabs - 1)) * 2.0;
 
-        Widget buildIcon(Color color) {
-          if (tab.icon != null) {
-            return Icon(tab.icon, size: tabSize, color: color);
-          } else if (tab.svgPath != null) {
-            return SvgPicture.asset(
-              tab.svgPath!,
-              width: tabSize,
-              height: tabSize,
-              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-            );
-          } else if (tab.svgString != null) {
-            return SvgPicture.string(
-              tab.svgString!,
-              width: tabSize,
-              height: tabSize,
-              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-            );
-          } else if (tab.assetPath != null) {
-            return Image.asset(tab.assetPath!, width: tabSize, height: tabSize);
-          } else if (tab.imageBytes != null) {
-            return Image.memory(tab.imageBytes!, width: tabSize, height: tabSize);
-          } else {
-            return Icon(Icons.circle, size: tabSize * 0.7, color: color);
-          }
-        }
+    final int totalSlots = widget.tabs.length + (widget.actionButton != null ? 1 : 0);
 
-        return NavigationDestination(
-          icon: buildIcon(unselectedColor),
-          selectedIcon: buildIcon(selectedColor),
-          label: tab.label,
-        );
-      }).toList(),
+    return SafeArea(
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+            BoxShadow(
+              color: selectedColor.withValues(alpha: isDark ? 0.15 : 0.05),
+              blurRadius: 30,
+              offset: const Offset(0, 12),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [
+                          const Color(0xFF1C1C1E).withValues(alpha: 0.85),
+                          const Color(0xFF141416).withValues(alpha: 0.7),
+                        ]
+                      : [
+                          Colors.white.withValues(alpha: 0.78),
+                          Colors.white.withValues(alpha: 0.45),
+                        ],
+                ),
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.25)
+                      : Colors.white.withValues(alpha: 0.85),
+                  width: 1.2,
+                ),
+              ),
+              child: Stack(
+                children: [
+                  // Animated sliding indicator pill
+                  Positioned.fill(
+                    child: AnimatedAlign(
+                      duration: const Duration(milliseconds: 350),
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                      alignment: Alignment(alignmentX, 0.0),
+                      child: FractionallySizedBox(
+                        widthFactor: 1.0 / totalSlots,
+                        heightFactor: 1.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? const Color(0xFF2C2C2E)
+                                : Colors.white.withValues(alpha: 0.9),
+                            borderRadius: BorderRadius.circular(35),
+                            border: Border.all(
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.2)
+                                  : Colors.white.withValues(alpha: 0.8),
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(
+                                  alpha: isDark ? 0.2 : 0.04,
+                                ),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      ...widget.tabs.asMap().entries.map((entry) {
+                        final int index = entry.key;
+                        final NativeLiquidGlassNavBarItem tab = entry.value;
+                        final bool isSelected = safeIndex == index;
+                        final double tabIconSize = tab.iconSize ?? defaultIconSize;
+
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () => widget.onTap(index),
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              color: Colors.transparent,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _buildTabIconWidget(
+                                    tab: tab,
+                                    color: isSelected ? selectedColor : unselectedColor,
+                                    size: tabIconSize,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    tab.label,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: defaultFontSize,
+                                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                      color: isDark
+                                          ? (isSelected
+                                              ? Colors.white
+                                              : const Color(0xFF8E8E93))
+                                          : (isSelected
+                                              ? const Color(0xFF111827)
+                                              : const Color(0xFF3C3C43)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                      if (widget.actionButton != null)
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: widget.actionButton!.onTap,
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              color: Colors.transparent,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 38,
+                                    height: 38,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: selectedColor,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: selectedColor.withValues(alpha: 0.4),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: _buildActionIconWidget(
+                                      actionButton: widget.actionButton!,
+                                      color: Colors.white,
+                                      size: widget.actionButton!.iconSize ?? 20.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 

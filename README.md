@@ -6,10 +6,11 @@ This package uses [platform views and method channels](https://docs.flutter.dev/
 
 ---
 
-## Demos
+## Showcase & Highlights
 
-![output](https://github.com/user-attachments/assets/d7691c1b-5eef-451d-b18f-4d118ca3e8f2)
-![output-items-bg](https://github.com/user-attachments/assets/5bbc0358-0e85-4604-89db-96eb68806053)
+| 💎 Liquid Glass & SVGs | 🌈 Live Mesh Translucency | 🔘 Quick Action Button |
+| :--- | :--- | :--- |
+| **Authentic Apple Blur**<br>Native `UITabBar` rendering with zero frame drops | **Retina Vector SVGs**<br>High-resolution rasterization for pixel-perfect clarity | **Floating Action Pill**<br>Circular action button for quick adds & media triggers |
 
 ---
 

@@ -209,7 +209,7 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
         // Default SVG Icons
         return const [
           NativeLiquidGlassNavBarItem(
-            label: 'Hhfdkshjfhdskjfdskhfjsdkome',
+            label: 'Home',
             svgPath: 'assets/icons/home.svg',
           ),
           NativeLiquidGlassNavBarItem(

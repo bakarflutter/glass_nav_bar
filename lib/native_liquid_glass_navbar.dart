@@ -361,11 +361,10 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
 
     final int totalTabs = widget.tabs.length;
     final int safeIndex = widget.currentIndex.clamp(0, totalTabs - 1);
-    final double alignmentX = totalTabs <= 1
-        ? 0.0
-        : -1.0 + (safeIndex / (totalTabs - 1)) * 2.0;
-
     final int totalSlots = widget.tabs.length + (widget.actionButton != null ? 1 : 0);
+    final double alignmentX = totalSlots <= 1
+        ? 0.0
+        : -1.0 + (safeIndex / (totalSlots - 1)) * 2.0;
 
     return SafeArea(
       child: Container(

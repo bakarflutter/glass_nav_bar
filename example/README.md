@@ -1,6 +1,6 @@
-# native_glass_navbar_example
+# liquid_glass_navbar_example
 
-Demonstrates how to use the native_glass_navbar plugin.
+Demonstrates how to use the liquid_glass_navbar plugin.
 
 ## Getting Started
 

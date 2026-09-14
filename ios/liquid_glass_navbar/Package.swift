@@ -4,18 +4,22 @@
 import PackageDescription
 
 let package = Package(
-    name: "native_glass_navbar",
+    name: "liquid_glass_navbar",
     platforms: [
         .iOS("13.0")
     ],
     products: [
-        .library(name: "native-glass-navbar", targets: ["native_glass_navbar"])
+        .library(name: "liquid-glass-navbar", targets: ["liquid_glass_navbar"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(name: "FlutterFramework", path: "../FlutterFramework")
+    ],
     targets: [
         .target(
-            name: "native_glass_navbar",
-            dependencies: [],
+            name: "liquid_glass_navbar",
+            dependencies: [
+                .product(name: "FlutterFramework", package: "FlutterFramework")
+            ],
             resources: [
                 .process("PrivacyInfo.xcprivacy")
             ]

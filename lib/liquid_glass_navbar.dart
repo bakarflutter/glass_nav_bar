@@ -1,18 +1,18 @@
 /// A Flutter plugin that provides a native liquid glass navigation bar for iOS with custom SVG, PNG, and icon support.
-library native_glass_navbar;
+library;
 
 export 'liquid_glass_helper.dart';
 export 'src/icon_rasterizer.dart';
 
-import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:native_glass_navbar/liquid_glass_helper.dart';
-import 'package:native_glass_navbar/src/icon_rasterizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:liquid_glass_navbar/liquid_glass_helper.dart';
+import 'package:liquid_glass_navbar/src/icon_rasterizer.dart';
 
-/// Represents a tab item in the [NativeGlassNavBar].
-class NativeGlassNavBarItem {
+/// Represents a tab item in the [LiquidGlassNavBar].
+class LiquidGlassNavBarItem {
   /// The label text to display for the tab.
   final String label;
 
@@ -34,11 +34,11 @@ class NativeGlassNavBarItem {
   /// The SF Symbol name or iOS asset catalog name (e.g., 'house', 'gear').
   final String? symbol;
 
-  /// Creates a new [NativeGlassNavBarItem].
+  /// Creates a new [LiquidGlassNavBarItem].
   ///
   /// Provide at least one icon source: [svgPath], [assetPath], [icon], [svgString],
   /// [imageBytes], or [symbol].
-  const NativeGlassNavBarItem({
+  const LiquidGlassNavBarItem({
     required this.label,
     this.svgPath,
     this.assetPath,
@@ -57,10 +57,13 @@ class NativeGlassNavBarItem {
        );
 }
 
-/// Represents an action button in the [NativeGlassNavBar].
+/// Backwards compatibility alias for [LiquidGlassNavBarItem].
+typedef NativeGlassNavBarItem = LiquidGlassNavBarItem;
+
+/// Represents an action button in the [LiquidGlassNavBar].
 ///
 /// It appears to the right of the tab as a circular floating button.
-class TabBarActionButton {
+class LiquidGlassActionButton {
   /// The Flutter asset path for a custom SVG icon (e.g., 'assets/icons/plus.svg').
   final String? svgPath;
 
@@ -82,11 +85,11 @@ class TabBarActionButton {
   /// The callback to be invoked when the action button is tapped.
   final VoidCallback onTap;
 
-  /// Creates a new [TabBarActionButton].
+  /// Creates a new [LiquidGlassActionButton].
   ///
   /// Provide at least one icon source: [svgPath], [assetPath], [icon], [svgString],
   /// [imageBytes], or [symbol].
-  const TabBarActionButton({
+  const LiquidGlassActionButton({
     this.svgPath,
     this.assetPath,
     this.icon,
@@ -105,20 +108,23 @@ class TabBarActionButton {
        );
 }
 
+/// Backwards compatibility alias for [LiquidGlassActionButton].
+typedef TabBarActionButton = LiquidGlassActionButton;
+
 /// A widget that displays a native glass liquid navigation bar on iOS.
 ///
 /// On non-iOS platforms or when the glass effect is not supported,
-/// it can optionally display a [fallback] widget.
-class NativeGlassNavBar extends StatefulWidget {
+/// it displays a custom [fallback] widget or an automatic built-in navigation fallback.
+class LiquidGlassNavBar extends StatefulWidget {
   /// The list of tabs to display in the navigation bar.
   ///
   /// If [actionButton] is provided, supports up to 4 tabs, else supports up to 5 tabs.
-  final List<NativeGlassNavBarItem> tabs;
+  final List<LiquidGlassNavBarItem> tabs;
 
   /// An optional action button.
   ///
   /// If provided, the action button appears to the right of the tabs as a circular floating button.
-  final TabBarActionButton? actionButton;
+  final LiquidGlassActionButton? actionButton;
 
   /// The index of the currently selected tab.
   final int currentIndex;
@@ -131,11 +137,12 @@ class NativeGlassNavBar extends StatefulWidget {
   /// If null, defaults to the primary color of the current [Theme].
   final Color? tintColor;
 
-  /// A widget to display when the native glass effect is not supported.
+  /// An optional widget to display when the native iOS glass effect is not supported.
+  /// If null, a built-in cross-platform navigation bar will be rendered automatically.
   final Widget? fallback;
 
-  /// Creates a new [NativeGlassNavBar].
-  const NativeGlassNavBar({
+  /// Creates a new [LiquidGlassNavBar].
+  const LiquidGlassNavBar({
     super.key,
     required this.tabs,
     this.actionButton,
@@ -146,15 +153,18 @@ class NativeGlassNavBar extends StatefulWidget {
   }) : assert(
          tabs.length <= (actionButton == null ? 5 : 4),
          actionButton == null
-             ? 'NativeGlassNavBar supports a maximum of 5 tabs.'
-             : 'NativeGlassNavBar with an action button supports a maximum of 4 tabs.',
+             ? 'LiquidGlassNavBar supports a maximum of 5 tabs.'
+             : 'LiquidGlassNavBar with an action button supports a maximum of 4 tabs.',
        );
 
   @override
-  State<NativeGlassNavBar> createState() => _NativeGlassNavBarState();
+  State<LiquidGlassNavBar> createState() => _LiquidGlassNavBarState();
 }
 
-class _NativeGlassNavBarState extends State<NativeGlassNavBar> {
+/// Backwards compatibility alias for [LiquidGlassNavBar].
+typedef NativeGlassNavBar = LiquidGlassNavBar;
+
+class _LiquidGlassNavBarState extends State<LiquidGlassNavBar> {
   MethodChannel? _channel;
   late Future<bool> _initFuture;
   List<Uint8List?> _tabImages = [];
@@ -181,6 +191,8 @@ class _NativeGlassNavBarState extends State<NativeGlassNavBar> {
           icon: tab.icon,
           svgString: tab.svgString,
           imageBytes: tab.imageBytes,
+          targetWidth: 22.0,
+          targetHeight: 22.0,
         ),
       ),
     );
@@ -193,6 +205,8 @@ class _NativeGlassNavBarState extends State<NativeGlassNavBar> {
         icon: widget.actionButton!.icon,
         svgString: widget.actionButton!.svgString,
         imageBytes: widget.actionButton!.imageBytes,
+        targetWidth: 24.0,
+        targetHeight: 24.0,
       );
     }
 
@@ -228,13 +242,51 @@ class _NativeGlassNavBarState extends State<NativeGlassNavBar> {
   }
 
   @override
-  void didUpdateWidget(NativeGlassNavBar oldWidget) {
+  void didUpdateWidget(LiquidGlassNavBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     _loadImages().then((_) {
       if (mounted) {
         _updateNativeView();
       }
     });
+  }
+
+  Widget _buildDefaultFallback(BuildContext context) {
+    final Color selectedColor =
+        widget.tintColor ?? Theme.of(context).colorScheme.primary;
+
+    return NavigationBar(
+      selectedIndex: widget.currentIndex.clamp(0, widget.tabs.length - 1),
+      onDestinationSelected: widget.onTap,
+      indicatorColor: selectedColor.withValues(alpha: 0.15),
+      destinations: widget.tabs.map((tab) {
+        Widget iconWidget;
+        if (tab.icon != null) {
+          iconWidget = Icon(tab.icon, size: 24);
+        } else if (tab.svgPath != null) {
+          iconWidget = SvgPicture.asset(
+            tab.svgPath!,
+            width: 24,
+            height: 24,
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.onSurfaceVariant,
+              BlendMode.srcIn,
+            ),
+          );
+        } else if (tab.assetPath != null) {
+          iconWidget = Image.asset(tab.assetPath!, width: 24, height: 24);
+        } else if (tab.imageBytes != null) {
+          iconWidget = Image.memory(tab.imageBytes!, width: 24, height: 24);
+        } else {
+          iconWidget = const Icon(Icons.circle, size: 18);
+        }
+
+        return NavigationDestination(
+          icon: iconWidget,
+          label: tab.label,
+        );
+      }).toList(),
+    );
   }
 
   @override
@@ -250,20 +302,10 @@ class _NativeGlassNavBarState extends State<NativeGlassNavBar> {
           if (widget.fallback != null) {
             return widget.fallback!;
           }
-
-          if (kDebugMode) {
-            developer.log(
-              'Liquid glass effect is not supported on this device. '
-              'Falling back to an empty widget. Provide a `fallback` widget to handle this case.',
-              name: 'NativeGlassNavBar',
-              level: 900,
-            );
-          }
-          return const SizedBox.shrink();
+          return _buildDefaultFallback(context);
         }
 
         final bottomPadding = MediaQuery.of(context).padding.bottom;
-        // Standard tab bar height is 49. Add bottom padding for safe area.
         final height = 49.0 + bottomPadding;
 
         return SizedBox(

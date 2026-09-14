@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,6 @@ class GlassIconLoader {
 
     // 2. PNG / Raster Asset Path (e.g. 'assets/icons/home.png')
     if (assetPath != null && assetPath.isNotEmpty) {
-      // If it ends with .svg, redirect to svg loader
       if (assetPath.toLowerCase().endsWith('.svg')) {
         return rasterizeSvg(
           svgPath: assetPath,
@@ -90,7 +90,7 @@ class GlassIconLoader {
     }
   }
 
-  /// Rasterizes Flutter [IconData] to high-resolution PNG bytes.
+  /// Rasterizes Flutter [IconData] to high-resolution PNG bytes with proper icon padding.
   static Future<Uint8List?> rasterizeIconData(
     IconData iconData, {
     double targetSize = 24.0,
@@ -107,6 +107,7 @@ class GlassIconLoader {
       final ui.PictureRecorder recorder = ui.PictureRecorder();
       final ui.Canvas canvas = ui.Canvas(recorder);
 
+      final double fontSize = dimension * 0.75;
       final TextPainter textPainter = TextPainter(
         textDirection: TextDirection.ltr,
         text: TextSpan(
@@ -114,7 +115,7 @@ class GlassIconLoader {
           style: TextStyle(
             inherit: false,
             color: const Color(0xFF000000),
-            fontSize: targetSize * pixelRatio,
+            fontSize: fontSize,
             fontFamily: iconData.fontFamily,
             package: iconData.fontPackage,
             fontFamilyFallback: iconData.fontFamilyFallback,
@@ -127,7 +128,7 @@ class GlassIconLoader {
         canvas,
         Offset(
           (dimension - textPainter.width) / 2,
-          (dimension - textPainter.height) / 2,
+          (dimension - textPainter.height) / 2 - (dimension * 0.04),
         ),
       );
 
@@ -154,7 +155,7 @@ class GlassIconLoader {
     }
   }
 
-  /// Rasterizes an SVG from an asset path, raw string, or bytes into PNG [Uint8List] bytes.
+  /// Rasterizes an SVG into high-resolution PNG bytes with uniform aspect ratio & centering.
   static Future<Uint8List?> rasterizeSvg({
     String? svgPath,
     String? svgString,
@@ -196,11 +197,28 @@ class GlassIconLoader {
       final double originalHeight =
           pictureInfo.size.height > 0 ? pictureInfo.size.height : targetHeight;
 
-      final double scaleX = width / originalWidth;
-      final double scaleY = height / originalHeight;
+      final double targetDrawableWidth = width * 0.82;
+      final double targetDrawableHeight = height * 0.82;
 
-      canvas.scale(scaleX, scaleY);
+      // Maintain uniform aspect ratio
+      final double scale = math.min(
+        targetDrawableWidth / originalWidth,
+        targetDrawableHeight / originalHeight,
+      );
+
+      final double scaledWidth = originalWidth * scale;
+      final double scaledHeight = originalHeight * scale;
+
+      // Center the scaled icon within the canvas with slight top lift
+      final double offsetX = (width - scaledWidth) / 2;
+      final double offsetY =
+          (height - scaledHeight) / 2 - (height * 0.04);
+
+      canvas.save();
+      canvas.translate(offsetX, offsetY);
+      canvas.scale(scale, scale);
       canvas.drawPicture(pictureInfo.picture);
+      canvas.restore();
 
       final ui.Picture scaledPicture = recorder.endRecording();
       final ui.Image image = await scaledPicture.toImage(width, height);

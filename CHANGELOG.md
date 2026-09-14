@@ -1,3 +1,12 @@
+## 1.1.0
+
+- **Custom SVG Support**: Added support for custom SVG icon assets (`svgPath`), raw SVG strings (`svgString`), and bytes.
+- **Custom PNG / Raster Assets**: Added support for PNG/JPEG image assets (`assetPath`) and raw image bytes (`imageBytes`).
+- **Flutter IconData Support**: Added direct support for Flutter `IconData` (`Icons.home`, `CupertinoIcons`, custom font icons) via `icon`.
+- **Hybrid Symbol Support**: Maintained backwards compatibility with Apple SF Symbols and Xcode named assets via `symbol`.
+- **In-Memory Caching**: Added high-performance rasterization cache in `GlassIconLoader` for smooth 60/120fps tab transitions without re-rasterizing.
+- **Swift Package Manager & CocoaPods**: Enhanced iOS native layer to support both SPM and CocoaPods with template rendering mode for automatic system theme tinting.
+
 ## 1.0.3
 
 - Added Swift Package Manager support for iOS while retaining CocoaPods compatibility.
@@ -16,4 +25,4 @@
 
 ## 1.0.0
 
-- Initial release of native_glass_navbar Flutter plugin
+- Initial release of liquid_glass_navbar Flutter plugin

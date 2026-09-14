@@ -45,18 +45,37 @@ class NativeTabBarPlatformView: NSObject, FlutterPlatformView {
 struct TabBarConfig: Equatable {
 	var labels: [String] = []
 	var symbols: [String] = []
-	var actionButtonSymbol: String = ""  // Default to empty
+	var itemImagesData: [Data?] = []
+	var actionButtonSymbol: String = ""
+	var actionButtonImageData: Data? = nil
 	var tintColor: UIColor = .systemBlue
 	var selectedIndex: Int = 0
 	var isDark: Bool = false
+
+	var hasActionButton: Bool {
+		return !actionButtonSymbol.isEmpty || actionButtonImageData != nil
+	}
 
 	init(from dict: [String: Any]?) {
 		guard let dict = dict else { return }
 		if let l = dict["labels"] as? [String] { self.labels = l }
 		if let s = dict["symbols"] as? [String] { self.symbols = s }
 
+		if let images = dict["itemImages"] as? [Any] {
+			self.itemImagesData = images.map { item in
+				if let typedData = item as? FlutterStandardTypedData {
+					return typedData.data
+				}
+				return nil
+			}
+		}
+
 		if let action = dict["actionButtonSymbol"] as? String {
 			self.actionButtonSymbol = action
+		}
+
+		if let actionTypedData = dict["actionButtonImage"] as? FlutterStandardTypedData {
+			self.actionButtonImageData = actionTypedData.data
 		}
 
 		if let colorInt = dict["tintColor"] as? NSNumber {
@@ -71,8 +90,10 @@ struct TabBarConfig: Equatable {
 	}
 
 	func structuralChange(from other: TabBarConfig) -> Bool {
-		return labels.count != other.labels.count || symbols.count != other.symbols.count
-			|| (actionButtonSymbol.isEmpty != other.actionButtonSymbol.isEmpty)
+		return labels.count != other.labels.count
+			|| symbols.count != other.symbols.count
+			|| itemImagesData.count != other.itemImagesData.count
+			|| (hasActionButton != other.hasActionButton)
 	}
 
 	private static func uiColorFromARGB(_ argb: Int) -> UIColor {
@@ -88,6 +109,9 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 	private let channel: FlutterMethodChannel
 	private var config: TabBarConfig
 	private var currentAppearanceIsDark: Bool
+
+	private static let tabIconSize = CGSize(width: 24, height: 24)
+	private static let actionIconSize = CGSize(width: 24, height: 24)
 
 	init(viewId: Int64, messenger: FlutterBinaryMessenger, args: Any?) {
 		self.channel = FlutterMethodChannel(
@@ -135,6 +159,20 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		itemAppearance.normal.iconColor = .systemGray
 		itemAppearance.selected.iconColor = config.tintColor
 
+		let normalAttributes: [NSAttributedString.Key: Any] = [
+			.font: UIFont.systemFont(ofSize: 10, weight: .medium),
+			.foregroundColor: UIColor.systemGray
+		]
+		let selectedAttributes: [NSAttributedString.Key: Any] = [
+			.font: UIFont.systemFont(ofSize: 10, weight: .medium),
+			.foregroundColor: config.tintColor
+		]
+
+		itemAppearance.normal.titleTextAttributes = normalAttributes
+		itemAppearance.selected.titleTextAttributes = selectedAttributes
+		itemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
+		itemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
+
 		appearance.stackedLayoutAppearance = itemAppearance
 		appearance.inlineLayoutAppearance = itemAppearance
 		appearance.compactInlineLayoutAppearance = itemAppearance
@@ -155,18 +193,11 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 
 			if newConfig.structuralChange(from: oldConfig) {
 				self.config = newConfig
-				performFullRebuild()  // Destructive
+				performFullRebuild()
 			} else {
-				// 2. Light Updates (In-Place)
 				self.config = newConfig
-
-				// A. Update Colors
 				updateSelectionAndColors()
-
-				// B. Update Symbol In-Place (Fixes Jank)
-				if oldConfig.actionButtonSymbol != newConfig.actionButtonSymbol {
-					updateActionSymbolInPlace()
-				}
+				updateTabImagesInPlace()
 			}
 
 			result(nil)
@@ -175,43 +206,65 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		}
 	}
 
-	// Updates the icon without destroying the TabBarItem
-	private func updateActionSymbolInPlace() {
+	private func updateTabImagesInPlace() {
 		guard let vcs = self.viewControllers else { return }
 
-		// Find the action button (Tag 99)
-		if let actionVC = vcs.first(where: { $0.tabBarItem.tag == 99 }) {
-			actionVC.tabBarItem.image = resolveSymbol(config.actionButtonSymbol)
+		for (i, vc) in vcs.enumerated() {
+			if vc.tabBarItem.tag == 99 {
+				vc.tabBarItem.image = resolveImage(
+					from: config.actionButtonImageData,
+					fallbackSymbol: config.actionButtonSymbol,
+					targetSize: Self.actionIconSize
+				)
+			} else if i < config.labels.count {
+				let imageData = i < config.itemImagesData.count ? config.itemImagesData[i] : nil
+				let symbolName = i < config.symbols.count ? config.symbols[i] : ""
+				vc.tabBarItem.image = resolveImage(
+					from: imageData,
+					fallbackSymbol: symbolName,
+					targetSize: Self.tabIconSize
+				)
+			}
 		}
 	}
 
 	private func performFullRebuild() {
 		var controllers: [UIViewController] = []
-		let count = max(config.labels.count, config.symbols.count)
+		let count = max(config.labels.count, max(config.symbols.count, config.itemImagesData.count))
 
 		// Standard Tabs
 		for i in 0..<count {
 			let dummyVC = UIViewController()
 			dummyVC.view.backgroundColor = .clear
 
-			let symbolName = i < config.symbols.count ? config.symbols[i] : "questionmark"
+			let symbolName = i < config.symbols.count ? config.symbols[i] : ""
 			let label = i < config.labels.count ? config.labels[i] : ""
+			let imageData = i < config.itemImagesData.count ? config.itemImagesData[i] : nil
 
 			dummyVC.tabBarItem = UITabBarItem(
 				title: label,
-				image: resolveSymbol(symbolName),
+				image: resolveImage(
+					from: imageData,
+					fallbackSymbol: symbolName,
+					targetSize: Self.tabIconSize
+				),
 				tag: i
 			)
+			dummyVC.tabBarItem.imageInsets = UIEdgeInsets(top: -1, left: 0, bottom: 1, right: 0)
 			controllers.append(dummyVC)
 		}
 
 		// Action Button
-		if !config.actionButtonSymbol.isEmpty {
+		if config.hasActionButton {
 			let actionVC = UIViewController()
 			actionVC.view.backgroundColor = .clear
 
 			let item = UITabBarItem(tabBarSystemItem: .search, tag: 99)
-			item.image = resolveSymbol(config.actionButtonSymbol)
+			item.image = resolveImage(
+				from: config.actionButtonImageData,
+				fallbackSymbol: config.actionButtonSymbol,
+				targetSize: Self.actionIconSize
+			)
 
 			actionVC.tabBarItem = item
 			controllers.append(actionVC)
@@ -242,10 +295,46 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 			}
 		}
 	}
-    
-    private func resolveSymbol(_ name: String) -> UIImage? {
-        return UIImage(systemName: name) ?? UIImage(named: name)
-    }
+
+	private func resolveImage(
+		from data: Data?,
+		fallbackSymbol: String?,
+		targetSize: CGSize
+	) -> UIImage? {
+		if let data = data, !data.isEmpty {
+			if let rawImg = UIImage(data: data, scale: 3.0) ?? UIImage(data: data) {
+				let resized = resizeImage(rawImg, targetSize: targetSize)
+				return resized.withRenderingMode(.alwaysTemplate)
+			}
+		}
+		if let symbol = fallbackSymbol, !symbol.isEmpty {
+			if #available(iOS 13.0, *) {
+				let config = UIImage.SymbolConfiguration(pointSize: targetSize.width * 0.75, weight: .regular)
+				if let symImg = UIImage(systemName: symbol, withConfiguration: config) {
+					return symImg.withRenderingMode(.alwaysTemplate)
+				}
+			}
+			if let namedImg = UIImage(named: symbol) {
+				return resizeImage(namedImg, targetSize: targetSize).withRenderingMode(.alwaysTemplate)
+			}
+		}
+		return UIImage(systemName: "questionmark")
+	}
+
+	private func resizeImage(_ image: UIImage, targetSize: CGSize) -> UIImage {
+		let format = UIGraphicsImageRendererFormat.default()
+		format.scale = UIScreen.main.scale
+		let renderer = UIGraphicsImageRenderer(size: targetSize, format: format)
+		return renderer.image { _ in
+			let insetRect = CGRect(
+				x: targetSize.width * 0.09,
+				y: targetSize.height * 0.04,
+				width: targetSize.width * 0.82,
+				height: targetSize.height * 0.82
+			)
+			image.draw(in: insetRect)
+		}
+	}
 
 	// MARK: - Delegate
 	func tabBarController(

@@ -156,18 +156,27 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		super.viewDidLayoutSubviews()
 		self.view.backgroundColor = .clear
 
-		// Manage overflow, truncation, and spacing for all tab item labels
+		// Manage overflow, truncation, and spacing for all tab item labels and icons
 		for subview in tabBar.subviews {
 			if let control = subview as? UIControl {
 				control.clipsToBounds = true
+				let buttonWidth = control.bounds.width
+				let horizontalPadding: CGFloat = 6.0
+				let maxLabelWidth = max(0, buttonWidth - (horizontalPadding * 2))
+
 				for child in control.subviews {
 					if let label = child as? UILabel {
 						label.lineBreakMode = .byTruncatingTail
 						label.numberOfLines = 1
 						label.adjustsFontSizeToFitWidth = true
-						label.minimumScaleFactor = 0.85
+						label.minimumScaleFactor = 0.80
 						label.textAlignment = .center
 						label.clipsToBounds = true
+
+						if label.frame.width > maxLabelWidth {
+							label.frame.size.width = maxLabelWidth
+							label.center.x = control.bounds.midX
+						}
 					}
 				}
 			}

@@ -49,6 +49,9 @@ struct TabBarConfig: Equatable {
 	var actionButtonSymbol: String = ""
 	var actionButtonImageData: Data? = nil
 	var tintColor: UIColor = .systemBlue
+	var unselectedColor: UIColor? = nil
+	var iconSize: CGFloat = 24.0
+	var fontSize: CGFloat = 10.0
 	var selectedIndex: Int = 0
 	var isDark: Bool = false
 
@@ -81,6 +84,15 @@ struct TabBarConfig: Equatable {
 		if let colorInt = dict["tintColor"] as? NSNumber {
 			self.tintColor = TabBarConfig.uiColorFromARGB(colorInt.intValue)
 		}
+		if let unselInt = dict["unselectedColor"] as? NSNumber {
+			self.unselectedColor = TabBarConfig.uiColorFromARGB(unselInt.intValue)
+		}
+		if let isize = dict["iconSize"] as? NSNumber {
+			self.iconSize = CGFloat(isize.doubleValue)
+		}
+		if let fsize = dict["fontSize"] as? NSNumber {
+			self.fontSize = CGFloat(fsize.doubleValue)
+		}
 		if let idx = dict["selectedIndex"] as? Int {
 			self.selectedIndex = idx
 		}
@@ -109,9 +121,6 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 	private let channel: FlutterMethodChannel
 	private var config: TabBarConfig
 	private var currentAppearanceIsDark: Bool
-
-	private static let tabIconSize = CGSize(width: 24, height: 24)
-	private static let actionIconSize = CGSize(width: 24, height: 24)
 
 	init(viewId: Int64, messenger: FlutterBinaryMessenger, args: Any?) {
 		self.channel = FlutterMethodChannel(
@@ -155,16 +164,17 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		appearance.shadowColor = .clear
 		appearance.backgroundEffect = UIBlurEffect(style: config.isDark ? .dark : .light)
 
+		let unselectedColor = config.unselectedColor ?? .systemGray
 		let itemAppearance = UITabBarItemAppearance()
-		itemAppearance.normal.iconColor = .systemGray
+		itemAppearance.normal.iconColor = unselectedColor
 		itemAppearance.selected.iconColor = config.tintColor
 
 		let normalAttributes: [NSAttributedString.Key: Any] = [
-			.font: UIFont.systemFont(ofSize: 10, weight: .medium),
-			.foregroundColor: UIColor.systemGray
+			.font: UIFont.systemFont(ofSize: config.fontSize, weight: .medium),
+			.foregroundColor: unselectedColor
 		]
 		let selectedAttributes: [NSAttributedString.Key: Any] = [
-			.font: UIFont.systemFont(ofSize: 10, weight: .medium),
+			.font: UIFont.systemFont(ofSize: config.fontSize, weight: .medium),
 			.foregroundColor: config.tintColor
 		]
 
@@ -208,13 +218,15 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 
 	private func updateTabImagesInPlace() {
 		guard let vcs = self.viewControllers else { return }
+		let tabSize = CGSize(width: config.iconSize, height: config.iconSize)
+		let actionSize = CGSize(width: config.iconSize, height: config.iconSize)
 
 		for (i, vc) in vcs.enumerated() {
 			if vc.tabBarItem.tag == 99 {
 				vc.tabBarItem.image = resolveImage(
 					from: config.actionButtonImageData,
 					fallbackSymbol: config.actionButtonSymbol,
-					targetSize: Self.actionIconSize
+					targetSize: actionSize
 				)
 			} else if i < config.labels.count {
 				let imageData = i < config.itemImagesData.count ? config.itemImagesData[i] : nil
@@ -222,7 +234,7 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 				vc.tabBarItem.image = resolveImage(
 					from: imageData,
 					fallbackSymbol: symbolName,
-					targetSize: Self.tabIconSize
+					targetSize: tabSize
 				)
 			}
 		}
@@ -231,6 +243,8 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 	private func performFullRebuild() {
 		var controllers: [UIViewController] = []
 		let count = max(config.labels.count, max(config.symbols.count, config.itemImagesData.count))
+		let tabSize = CGSize(width: config.iconSize, height: config.iconSize)
+		let actionSize = CGSize(width: config.iconSize, height: config.iconSize)
 
 		// Standard Tabs
 		for i in 0..<count {
@@ -246,7 +260,7 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 				image: resolveImage(
 					from: imageData,
 					fallbackSymbol: symbolName,
-					targetSize: Self.tabIconSize
+					targetSize: tabSize
 				),
 				tag: i
 			)
@@ -263,7 +277,7 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 			item.image = resolveImage(
 				from: config.actionButtonImageData,
 				fallbackSymbol: config.actionButtonSymbol,
-				targetSize: Self.actionIconSize
+				targetSize: actionSize
 			)
 
 			actionVC.tabBarItem = item
@@ -275,16 +289,10 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 	}
 
 	private func updateSelectionAndColors() {
-		let needsAppearanceUpdate =
-			tabBar.tintColor != config.tintColor
-			|| currentAppearanceIsDark != config.isDark
-
-		if needsAppearanceUpdate {
-			tabBar.tintColor = config.tintColor
-			currentAppearanceIsDark = config.isDark
-			overrideUserInterfaceStyle = config.isDark ? .dark : .light
-			configureAppearance()
-		}
+		tabBar.tintColor = config.tintColor
+		currentAppearanceIsDark = config.isDark
+		overrideUserInterfaceStyle = config.isDark ? .dark : .light
+		configureAppearance()
 
 		if self.selectedIndex != config.selectedIndex {
 			if let vcs = self.viewControllers,

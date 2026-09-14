@@ -34,6 +34,9 @@ class NativeLiquidGlassNavBarItem {
   /// The SF Symbol name or iOS asset catalog name (e.g., 'house', 'gear').
   final String? symbol;
 
+  /// Optional custom icon size for this tab (defaults to navbar's [iconSize] or 24.0).
+  final double? iconSize;
+
   /// Creates a new [NativeLiquidGlassNavBarItem].
   ///
   /// Provide at least one icon source: [svgPath], [assetPath], [icon], [svgString],
@@ -46,6 +49,7 @@ class NativeLiquidGlassNavBarItem {
     this.svgString,
     this.imageBytes,
     this.symbol,
+    this.iconSize,
   }) : assert(
          svgPath != null ||
              assetPath != null ||
@@ -85,6 +89,9 @@ class NativeLiquidGlassActionButton {
   /// The SF Symbol name or iOS asset catalog name (e.g., 'plus').
   final String? symbol;
 
+  /// Optional custom icon size for this action button.
+  final double? iconSize;
+
   /// The callback to be invoked when the action button is tapped.
   final VoidCallback onTap;
 
@@ -99,6 +106,7 @@ class NativeLiquidGlassActionButton {
     this.svgString,
     this.imageBytes,
     this.symbol,
+    this.iconSize,
     required this.onTap,
   }) : assert(
          svgPath != null ||
@@ -143,6 +151,17 @@ class NativeLiquidGlassNavBar extends StatefulWidget {
   /// If null, defaults to the primary color of the current [Theme].
   final Color? tintColor;
 
+  /// The color to use for unselected tab icons and labels.
+  ///
+  /// If null, defaults to iOS system gray.
+  final Color? unselectedColor;
+
+  /// Custom icon size in points (default: 24.0).
+  final double? iconSize;
+
+  /// Custom label font size in points (default: 10.0).
+  final double? fontSize;
+
   /// An optional widget to display when the native iOS glass effect is not supported.
   /// If null, a built-in cross-platform navigation bar will be rendered automatically.
   final Widget? fallback;
@@ -155,6 +174,9 @@ class NativeLiquidGlassNavBar extends StatefulWidget {
     required this.currentIndex,
     required this.onTap,
     this.tintColor,
+    this.unselectedColor,
+    this.iconSize,
+    this.fontSize,
     this.fallback,
   }) : assert(
          tabs.length <= (actionButton == null ? 5 : 4),
@@ -192,6 +214,8 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
   }
 
   Future<void> _loadImages() async {
+    final double defaultSize = widget.iconSize ?? 24.0;
+
     final List<Uint8List?> tabImages = await Future.wait(
       widget.tabs.map(
         (tab) => GlassIconLoader.resolveImageBytes(
@@ -200,22 +224,23 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
           icon: tab.icon,
           svgString: tab.svgString,
           imageBytes: tab.imageBytes,
-          targetWidth: 24.0,
-          targetHeight: 24.0,
+          targetWidth: tab.iconSize ?? defaultSize,
+          targetHeight: tab.iconSize ?? defaultSize,
         ),
       ),
     );
 
     Uint8List? actionImg;
     if (widget.actionButton != null) {
+      final double actionSize = widget.actionButton!.iconSize ?? defaultSize;
       actionImg = await GlassIconLoader.resolveImageBytes(
         svgPath: widget.actionButton!.svgPath,
         assetPath: widget.actionButton!.assetPath,
         icon: widget.actionButton!.icon,
         svgString: widget.actionButton!.svgString,
         imageBytes: widget.actionButton!.imageBytes,
-        targetWidth: 24.0,
-        targetHeight: 24.0,
+        targetWidth: actionSize,
+        targetHeight: actionSize,
       );
     }
 
@@ -241,6 +266,9 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
       'tintColor': widget.tintColor != null
           ? widget.tintColor!.toARGB32()
           : Theme.of(context).colorScheme.primary.toARGB32(),
+      'unselectedColor': widget.unselectedColor?.toARGB32(),
+      'iconSize': widget.iconSize ?? 24.0,
+      'fontSize': widget.fontSize ?? 10.0,
     };
   }
 
@@ -263,35 +291,46 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
   Widget _buildDefaultFallback(BuildContext context) {
     final Color selectedColor =
         widget.tintColor ?? Theme.of(context).colorScheme.primary;
+    final Color unselectedColor =
+        widget.unselectedColor ?? Theme.of(context).colorScheme.onSurfaceVariant;
+    final double iconSize = widget.iconSize ?? 24.0;
 
     return NavigationBar(
       selectedIndex: widget.currentIndex.clamp(0, widget.tabs.length - 1),
       onDestinationSelected: widget.onTap,
       indicatorColor: selectedColor.withValues(alpha: 0.15),
       destinations: widget.tabs.map((tab) {
-        Widget iconWidget;
-        if (tab.icon != null) {
-          iconWidget = Icon(tab.icon, size: 24);
-        } else if (tab.svgPath != null) {
-          iconWidget = SvgPicture.asset(
-            tab.svgPath!,
-            width: 24,
-            height: 24,
-            colorFilter: ColorFilter.mode(
-              Theme.of(context).colorScheme.onSurfaceVariant,
-              BlendMode.srcIn,
-            ),
-          );
-        } else if (tab.assetPath != null) {
-          iconWidget = Image.asset(tab.assetPath!, width: 24, height: 24);
-        } else if (tab.imageBytes != null) {
-          iconWidget = Image.memory(tab.imageBytes!, width: 24, height: 24);
-        } else {
-          iconWidget = const Icon(Icons.circle, size: 18);
+        final double tabSize = tab.iconSize ?? iconSize;
+
+        Widget buildIcon(Color color) {
+          if (tab.icon != null) {
+            return Icon(tab.icon, size: tabSize, color: color);
+          } else if (tab.svgPath != null) {
+            return SvgPicture.asset(
+              tab.svgPath!,
+              width: tabSize,
+              height: tabSize,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            );
+          } else if (tab.svgString != null) {
+            return SvgPicture.string(
+              tab.svgString!,
+              width: tabSize,
+              height: tabSize,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            );
+          } else if (tab.assetPath != null) {
+            return Image.asset(tab.assetPath!, width: tabSize, height: tabSize);
+          } else if (tab.imageBytes != null) {
+            return Image.memory(tab.imageBytes!, width: tabSize, height: tabSize);
+          } else {
+            return Icon(Icons.circle, size: tabSize * 0.7, color: color);
+          }
         }
 
         return NavigationDestination(
-          icon: iconWidget,
+          icon: buildIcon(unselectedColor),
+          selectedIcon: buildIcon(selectedColor),
           label: tab.label,
         );
       }).toList(),

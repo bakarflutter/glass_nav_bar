@@ -107,7 +107,7 @@ class GlassIconLoader {
       final ui.PictureRecorder recorder = ui.PictureRecorder();
       final ui.Canvas canvas = ui.Canvas(recorder);
 
-      final double fontSize = dimension * 0.92;
+      final double fontSize = dimension * 1.25;
       final TextPainter textPainter = TextPainter(
         textDirection: TextDirection.ltr,
         text: TextSpan(
@@ -197,8 +197,8 @@ class GlassIconLoader {
       final double originalHeight =
           pictureInfo.size.height > 0 ? pictureInfo.size.height : targetHeight;
 
-      final double targetDrawableWidth = width * 0.94;
-      final double targetDrawableHeight = height * 0.94;
+      final double targetDrawableWidth = width * 1.08;
+      final double targetDrawableHeight = height * 1.08;
 
       // Maintain uniform aspect ratio
       final double scale = math.min(

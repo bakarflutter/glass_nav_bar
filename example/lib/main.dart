@@ -5,17 +5,9 @@ void main() {
   runApp(const LiquidGlassApp());
 }
 
-enum BackgroundStyle {
-  vibrantMesh,
-  auroraGlow,
-  minimalSolid,
-}
+enum BackgroundStyle { vibrantMesh, auroraGlow, minimalSolid }
 
-enum IconSourceMode {
-  svgs,
-  iconData,
-  symbols,
-}
+enum IconSourceMode { svgs, iconData, symbols }
 
 class LiquidGlassApp extends StatefulWidget {
   const LiquidGlassApp({super.key});
@@ -28,7 +20,7 @@ class _LiquidGlassAppState extends State<LiquidGlassApp> {
   ThemeMode _themeMode = ThemeMode.system;
   Color _tintColor = const Color(0xFF0A84FF); // Apple Blue
   Color _unselectedColor = const Color(0xFF8E8E93); // Apple System Gray
-  double _iconSize = 24.0;
+  double _iconSize = 26.0;
   double _fontSize = 10.0;
   BackgroundStyle _backgroundStyle = BackgroundStyle.vibrantMesh;
   IconSourceMode _iconSourceMode = IconSourceMode.svgs;
@@ -184,7 +176,10 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               ListTile(
                 leading: CircleAvatar(
                   backgroundColor: widget.tintColor.withValues(alpha: 0.15),
-                  child: Icon(Icons.add_photo_alternate_rounded, color: widget.tintColor),
+                  child: Icon(
+                    Icons.add_photo_alternate_rounded,
+                    color: widget.tintColor,
+                  ),
                 ),
                 title: const Text('Upload Vector SVG'),
                 subtitle: const Text('Add SVG icons dynamically to navigation'),
@@ -196,7 +191,9 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                   child: Icon(Icons.palette_rounded, color: widget.tintColor),
                 ),
                 title: const Text('Change Glass Theme'),
-                subtitle: const Text('Toggle blur effects and liquid glass styling'),
+                subtitle: const Text(
+                  'Toggle blur effects and liquid glass styling',
+                ),
                 onTap: () => Navigator.pop(ctx),
               ),
             ],
@@ -230,10 +227,7 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
         ];
       case IconSourceMode.iconData:
         return const [
-          NativeLiquidGlassNavBarItem(
-            label: 'Home',
-            icon: Icons.home_rounded,
-          ),
+          NativeLiquidGlassNavBarItem(label: 'Home', icon: Icons.home_rounded),
           NativeLiquidGlassNavBarItem(
             label: 'Search',
             icon: Icons.search_rounded,
@@ -249,18 +243,12 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
         ];
       case IconSourceMode.symbols:
         return const [
-          NativeLiquidGlassNavBarItem(
-            label: 'Home',
-            symbol: 'house.fill',
-          ),
+          NativeLiquidGlassNavBarItem(label: 'Home', symbol: 'house.fill'),
           NativeLiquidGlassNavBarItem(
             label: 'Search',
             symbol: 'magnifyingglass',
           ),
-          NativeLiquidGlassNavBarItem(
-            label: 'Saved',
-            symbol: 'heart.fill',
-          ),
+          NativeLiquidGlassNavBarItem(label: 'Saved', symbol: 'heart.fill'),
           NativeLiquidGlassNavBarItem(
             label: 'Settings',
             symbol: 'gearshape.fill',
@@ -327,8 +315,12 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFFFF2D55).withValues(alpha: isDark ? 0.35 : 0.25),
-                      const Color(0xFFAF52DE).withValues(alpha: isDark ? 0.25 : 0.15),
+                      const Color(
+                        0xFFFF2D55,
+                      ).withValues(alpha: isDark ? 0.35 : 0.25),
+                      const Color(
+                        0xFFAF52DE,
+                      ).withValues(alpha: isDark ? 0.25 : 0.15),
                       Colors.transparent,
                     ],
                   ),
@@ -345,7 +337,9 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF34C759).withValues(alpha: isDark ? 0.30 : 0.20),
+                      const Color(
+                        0xFF34C759,
+                      ).withValues(alpha: isDark ? 0.30 : 0.20),
                       Colors.transparent,
                     ],
                   ),
@@ -361,8 +355,16 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: isDark
-                  ? const [Color(0xFF0F172A), Color(0xFF1E1B4B), Color(0xFF311042)]
-                  : const [Color(0xFFEFF6FF), Color(0xFFFDF4FF), Color(0xFFFFF1F2)],
+                  ? const [
+                      Color(0xFF0F172A),
+                      Color(0xFF1E1B4B),
+                      Color(0xFF311042),
+                    ]
+                  : const [
+                      Color(0xFFEFF6FF),
+                      Color(0xFFFDF4FF),
+                      Color(0xFFFFF1F2),
+                    ],
             ),
           ),
         );
@@ -380,7 +382,8 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
         _buildBackground(context),
         Scaffold(
           backgroundColor: Colors.transparent,
-          extendBody: true, // Extends background content right behind liquid glass blur
+          extendBody:
+              true, // Extends background content right behind liquid glass blur
           body: IndexedStack(
             index: _currentIndex,
             children: [
@@ -423,7 +426,8 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                 color: widget.tintColor,
               ),
               onPressed: () {
-                final next = widget.backgroundStyle == BackgroundStyle.vibrantMesh
+                final next =
+                    widget.backgroundStyle == BackgroundStyle.vibrantMesh
                     ? BackgroundStyle.minimalSolid
                     : BackgroundStyle.vibrantMesh;
                 widget.onBackgroundChanged(next);
@@ -451,11 +455,26 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              _buildActivityItem('Tab 1: assets/icons/home.svg (Home)', Icons.home_rounded),
-              _buildActivityItem('Tab 2: assets/icons/search.svg (Search)', Icons.search_rounded),
-              _buildActivityItem('Tab 3: assets/icons/heart.svg (Saved)', Icons.favorite_rounded),
-              _buildActivityItem('Tab 4: assets/icons/settings.svg (Settings)', Icons.settings_rounded),
-              _buildActivityItem('Action: assets/icons/plus.svg (Quick Action)', Icons.add_circle_rounded),
+              _buildActivityItem(
+                'Tab 1: assets/icons/home.svg (Home)',
+                Icons.home_rounded,
+              ),
+              _buildActivityItem(
+                'Tab 2: assets/icons/search.svg (Search)',
+                Icons.search_rounded,
+              ),
+              _buildActivityItem(
+                'Tab 3: assets/icons/heart.svg (Saved)',
+                Icons.favorite_rounded,
+              ),
+              _buildActivityItem(
+                'Tab 4: assets/icons/settings.svg (Settings)',
+                Icons.settings_rounded,
+              ),
+              _buildActivityItem(
+                'Action: assets/icons/plus.svg (Quick Action)',
+                Icons.add_circle_rounded,
+              ),
               const SizedBox(height: 16),
               _buildGlassShowcaseCard(),
               const SizedBox(height: 120),
@@ -655,7 +674,9 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                 color: isDark
                     ? const Color(0xFF1E293B).withValues(alpha: 0.85)
                     : Colors.white.withValues(alpha: 0.9),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -664,7 +685,10 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                       // Icon Mode Selection
                       const Text(
                         'Icon Source Mode',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       SegmentedButton<IconSourceMode>(
@@ -686,14 +710,18 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                           ),
                         ],
                         selected: {widget.iconSourceMode},
-                        onSelectionChanged: (set) => widget.onIconSourceChanged(set.first),
+                        onSelectionChanged: (set) =>
+                            widget.onIconSourceChanged(set.first),
                       ),
                       const SizedBox(height: 24),
 
                       // Theme Mode
                       const Text(
                         'Appearance Theme',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       SegmentedButton<ThemeMode>(
@@ -715,14 +743,18 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                           ),
                         ],
                         selected: {widget.themeMode},
-                        onSelectionChanged: (set) => widget.onThemeChanged(set.first),
+                        onSelectionChanged: (set) =>
+                            widget.onThemeChanged(set.first),
                       ),
                       const SizedBox(height: 24),
 
                       // Background Wallpaper Toggle
                       const Text(
                         'Glass Background Style',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       SegmentedButton<BackgroundStyle>(
@@ -741,7 +773,8 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                           ),
                         ],
                         selected: {widget.backgroundStyle},
-                        onSelectionChanged: (set) => widget.onBackgroundChanged(set.first),
+                        onSelectionChanged: (set) =>
+                            widget.onBackgroundChanged(set.first),
                       ),
                       const SizedBox(height: 24),
 
@@ -751,7 +784,10 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                         children: [
                           const Text(
                             'Custom Icon Size',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                           Text(
                             '${widget.iconSize.toInt()} pt',
@@ -779,7 +815,10 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                         children: [
                           const Text(
                             'Custom Label Text Size',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                           Text(
                             '${widget.fontSize.toInt()} pt',
@@ -804,7 +843,10 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                       // Active Tint Color Picker
                       const Text(
                         'Active Tint Color (Icon & Text)',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Wrap(
@@ -823,7 +865,9 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                                 shape: BoxShape.circle,
                                 border: isSelected
                                     ? Border.all(
-                                        color: isDark ? Colors.white : Colors.black,
+                                        color: isDark
+                                            ? Colors.white
+                                            : Colors.black,
                                         width: 3,
                                       )
                                     : null,
@@ -837,7 +881,11 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                                 ],
                               ),
                               child: isSelected
-                                  ? const Icon(Icons.check, color: Colors.white, size: 18)
+                                  ? const Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 18,
+                                    )
                                   : null,
                             ),
                           );
@@ -848,7 +896,10 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                       // Unselected Color Picker
                       const Text(
                         'Unselected Color (Inactive Tab & Text)',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Wrap(
@@ -873,7 +924,11 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                                     : null,
                               ),
                               child: isSelected
-                                  ? const Icon(Icons.check, color: Colors.white, size: 18)
+                                  ? const Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 18,
+                                    )
                                   : null,
                             ),
                           );
@@ -988,11 +1043,19 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
     return Row(
       children: [
         Expanded(
-          child: _buildStatCard('Custom SVGs', 'Retina 3x', Icons.image_aspect_ratio_rounded),
+          child: _buildStatCard(
+            'Custom SVGs',
+            'Retina 3x',
+            Icons.image_aspect_ratio_rounded,
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: _buildStatCard('Liquid Glass', 'Live Blur', Icons.blur_on_rounded),
+          child: _buildStatCard(
+            'Liquid Glass',
+            'Live Blur',
+            Icons.blur_on_rounded,
+          ),
         ),
       ],
     );

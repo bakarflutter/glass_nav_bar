@@ -50,7 +50,7 @@ struct TabBarConfig: Equatable {
 	var actionButtonImageData: Data? = nil
 	var tintColor: UIColor = .systemBlue
 	var unselectedColor: UIColor? = nil
-	var iconSize: CGFloat = 24.0
+	var iconSize: CGFloat = 26.0
 	var fontSize: CGFloat = 10.0
 	var selectedIndex: Int = 0
 	var isDark: Bool = false

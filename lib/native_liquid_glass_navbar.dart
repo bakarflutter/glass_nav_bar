@@ -214,7 +214,7 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
   }
 
   Future<void> _loadImages() async {
-    final double defaultSize = widget.iconSize ?? 24.0;
+    final double defaultSize = widget.iconSize ?? 26.0;
 
     final List<Uint8List?> tabImages = await Future.wait(
       widget.tabs.map(
@@ -267,7 +267,7 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
           ? widget.tintColor!.toARGB32()
           : Theme.of(context).colorScheme.primary.toARGB32(),
       'unselectedColor': widget.unselectedColor?.toARGB32(),
-      'iconSize': widget.iconSize ?? 24.0,
+      'iconSize': widget.iconSize ?? 26.0,
       'fontSize': widget.fontSize ?? 10.0,
     };
   }

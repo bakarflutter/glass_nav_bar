@@ -34,53 +34,43 @@ Add `native_liquid_glass_navbar` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  native_liquid_glass_navbar: ^1.0.0
+  native_liquid_glass_navbar: ^1.0.3
 ```
 
 Run `flutter pub get`.
 
 ---
 
-## Usage
+## Easy Usage (2 Popular Options)
 
-Import the package:
+### Option 1: Quick Named Constructors (Recommended)
 
-```dart
-import 'package:native_liquid_glass_navbar/native_liquid_glass_navbar.dart';
-```
-
-### 1. Using Custom SVG Icons
-
-Place your `.svg` files in your Flutter assets folder (e.g., `assets/icons/`) and declare them in your `pubspec.yaml`:
-
-```yaml
-flutter:
-  assets:
-    - assets/icons/
-```
-
-Then create your navigation bar:
+Use convenient named constructors for crisp, declarative code:
 
 ```dart
 NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
-  onTap: (index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  },
+  onTap: (index) => setState(() => _currentIndex = index),
+  actionButton: NativeLiquidGlassActionButton.svg(
+    svgPath: 'assets/icons/plus.svg',
+    onTap: () => _openCreateModal(),
+  ),
   tabs: const [
-    NativeLiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem.svg(
       label: 'Home',
       svgPath: 'assets/icons/home.svg',
     ),
-    NativeLiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem.svg(
       label: 'Search',
       svgPath: 'assets/icons/search.svg',
     ),
-    NativeLiquidGlassNavBarItem(
+    NativeLiquidGlassNavBarItem.icon(
+      label: 'Saved',
+      icon: Icons.favorite_rounded,
+    ),
+    NativeLiquidGlassNavBarItem.symbol(
       label: 'Settings',
-      svgPath: 'assets/icons/settings.svg',
+      symbol: 'gearshape.fill',
     ),
   ],
 )
@@ -88,13 +78,17 @@ NativeLiquidGlassNavBar(
 
 ---
 
-### 2. Using PNGs, SVGs, and Flutter IconData
+### Option 2: Standard Constructor
 
 You can mix and match custom SVGs, PNGs, and Flutter `IconData`:
 
 ```dart
 NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
+  tintColor: const Color(0xFF0A84FF),
+  unselectedColor: const Color(0xFF8E8E93),
+  iconSize: 26.0,
+  fontSize: 10.0,
   onTap: (index) => setState(() => _currentIndex = index),
   tabs: const [
     NativeLiquidGlassNavBarItem(
@@ -102,8 +96,8 @@ NativeLiquidGlassNavBar(
       svgPath: 'assets/icons/home.svg',
     ),
     NativeLiquidGlassNavBarItem(
-      label: 'Profile',
-      assetPath: 'assets/icons/profile.png',
+      label: 'Search',
+      assetPath: 'assets/icons/search.png',
     ),
     NativeLiquidGlassNavBarItem(
       label: 'Settings',
@@ -115,52 +109,51 @@ NativeLiquidGlassNavBar(
 
 ---
 
-### 3. Adding an Action Button
+## Cross-Platform Fallback & Customization
 
-You can add an action button (e.g., for creating a new post or item). When an action button is present, the maximum number of tabs is 4 (for a total of 5 items including the action button).
+When running on non-iOS platforms (Android, Web, macOS, Windows, Linux) or older iOS versions, `native_liquid_glass_navbar` provides two flexible options:
+
+### 1. Built-in Premium Glass Fallback (Default)
+
+By default, the plugin automatically renders a floating frosted-glass navbar with:
+- **`ImageFilter.blur` (sigma 25)** backdrop glassmorphic blur.
+- **Animated sliding pill indicator** with smooth spring transitions.
+- Automatic light/dark mode glass gradient borders and drop shadows.
+- Direct support for all your SVGs, PNGs, `IconData`, and action buttons.
+
+You can customize this fallback directly using the properties on `NativeLiquidGlassNavBar`:
 
 ```dart
 NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
-  actionButton: NativeLiquidGlassActionButton(
-    svgPath: 'assets/icons/plus.svg',
-    onTap: () {
-      print('Action button tapped!');
-    },
-  ),
-  tabs: const [
-    NativeLiquidGlassNavBarItem(
-      label: 'Home',
-      svgPath: 'assets/icons/home.svg',
-    ),
-    NativeLiquidGlassNavBarItem(
-      label: 'Search',
-      svgPath: 'assets/icons/search.svg',
-    ),
-  ],
+  // Customization properties applied across native and fallback:
+  tintColor: Colors.blueAccent,       // Active icon & label color
+  unselectedColor: Colors.grey,       // Inactive icon & label color
+  iconSize: 26.0,                     // Icon dimension
+  fontSize: 11.0,                     // Label font size
+  tabs: _tabs,
+  actionButton: _actionButton,
 )
 ```
 
----
+### 2. Providing a Custom Fallback Widget
 
-### 4. Cross-Platform Fallback (Android & Older iOS)
-
-Since this plugin utilizes native iOS Liquid Glass APIs, on Android or unsupported platforms it will automatically render a built-in fallback navigation bar, or you can provide a custom `fallback` widget:
+If you prefer a standard Material 3 `NavigationBar` or a custom design for Android/Web, provide the `fallback` parameter:
 
 ```dart
 NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
-  tabs: const [
-    NativeLiquidGlassNavBarItem(label: 'Home', svgPath: 'assets/icons/home.svg'),
-    NativeLiquidGlassNavBarItem(label: 'Settings', icon: Icons.settings),
-  ],
+  tabs: _tabs,
+  // Custom fallback widget rendered on Android / Web:
   fallback: NavigationBar(
     selectedIndex: _currentIndex,
     onDestinationSelected: (index) => setState(() => _currentIndex = index),
     destinations: const [
       NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+      NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
+      NavigationDestination(icon: Icon(Icons.favorite), label: 'Saved'),
       NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
     ],
   ),
@@ -175,32 +168,46 @@ NativeLiquidGlassNavBar(
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
-| `tabs` | `List<NativeLiquidGlassNavBarItem>` | List of tabs to display. Maximum 5 (or 4 when `actionButton` is provided). |
+| `tabs` | `List<NativeLiquidGlassNavBarItem>` | List of tabs to display (maximum 5, or 4 when `actionButton` is provided). |
 | `currentIndex` | `int` | The zero-based index of the currently active tab. |
-| `onTap` | `ValueChanged<int>` | Callback triggered when a tab is tapped. |
+| `onTap` | `ValueChanged<int>` | Callback triggered when a tab is selected. |
 | `actionButton` | `NativeLiquidGlassActionButton?` | Optional circular action button floating to the right of the tabs. |
-| `tintColor` | `Color?` | Custom tint color for active tab and icons. Defaults to `Theme.of(context).colorScheme.primary`. |
-| `fallback` | `Widget?` | Optional widget to display on non-iOS or unsupported devices (automatic fallback provided by default). |
+| `tintColor` | `Color?` | Custom tint color for active tab and icons. |
+| `unselectedColor` | `Color?` | Custom color for inactive tabs and icons. |
+| `iconSize` | `double?` | Custom size for tab icons (defaults to `26.0`). |
+| `fontSize` | `double?` | Custom font size for tab labels (defaults to `10.0`). |
+| `fallback` | `Widget?` | Custom fallback widget for Android/Web (uses built-in glass navbar if null). |
 
 ---
 
 ### `NativeLiquidGlassNavBarItem`
 
-Provide at least **one** icon source (`svgPath`, `assetPath`, `icon`, `svgString`, `imageBytes`, or `symbol`).
+Named constructors:
+- `NativeLiquidGlassNavBarItem.svg({required String label, required String svgPath, double? iconSize})`
+- `NativeLiquidGlassNavBarItem.icon({required String label, required IconData icon, double? iconSize})`
+- `NativeLiquidGlassNavBarItem.asset({required String label, required String assetPath, double? iconSize})`
+- `NativeLiquidGlassNavBarItem.symbol({required String label, required String symbol, double? iconSize})`
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `label` | `String` | Text label displayed under the tab icon. |
-| `svgPath` | `String?` | Flutter asset path to an SVG vector file (e.g. `'assets/icons/home.svg'`). |
-| `assetPath` | `String?` | Flutter asset path to a PNG/JPEG/WebP image (e.g. `'assets/icons/home.png'`). |
-| `icon` | `IconData?` | Flutter [IconData] to render as an icon (e.g. `Icons.home`, `CupertinoIcons.house`). |
+| `svgPath` | `String?` | Flutter asset path to an SVG vector file (`assets/icons/home.svg`). |
+| `assetPath` | `String?` | Flutter asset path to a PNG/JPEG/WebP image (`assets/icons/home.png`). |
+| `icon` | `IconData?` | Flutter [IconData] to render (`Icons.home`, `CupertinoIcons.house`). |
 | `svgString` | `String?` | Raw SVG XML string to render dynamically. |
 | `imageBytes` | `Uint8List?` | Raw PNG byte buffer for in-memory images. |
-| `symbol` | `String?` | Apple SF Symbol name (e.g. `'house'`, `'gear'`) or native iOS asset catalog name. |
+| `symbol` | `String?` | Apple SF Symbol name (`house.fill`, `gearshape.fill`). |
+| `iconSize` | `double?` | Individual tab icon size override. |
 
 ---
 
 ### `NativeLiquidGlassActionButton`
+
+Named constructors:
+- `NativeLiquidGlassActionButton.svg({required String svgPath, required VoidCallback onTap, double? iconSize})`
+- `NativeLiquidGlassActionButton.icon({required IconData icon, required VoidCallback onTap, double? iconSize})`
+- `NativeLiquidGlassActionButton.asset({required String assetPath, required VoidCallback onTap, double? iconSize})`
+- `NativeLiquidGlassActionButton.symbol({required String symbol, required VoidCallback onTap, double? iconSize})`
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
@@ -211,6 +218,7 @@ Provide at least **one** icon source (`svgPath`, `assetPath`, `icon`, `svgString
 | `svgString` | `String?` | Raw SVG XML string. |
 | `imageBytes` | `Uint8List?` | Raw PNG byte buffer. |
 | `symbol` | `String?` | Apple SF Symbol name or native asset name. |
+| `iconSize` | `double?` | Action button icon size override. |
 
 ---
 

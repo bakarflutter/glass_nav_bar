@@ -1,3 +1,9 @@
+## 1.0.3
+
+- **High-End Built-in Glass Fallback**: Premium floating frosted-glass navbar with smooth animated sliding indicator pill for Android, Web, macOS, Linux, and Windows.
+- **Accurate Indicator Alignment**: Exact mathematical alignment positioning for sliding indicator pills across all tab counts and action button configurations.
+- **Enhanced Documentation & Customization**: Comprehensive README guides on customizing the fallback navbar, theming, font sizing, and named constructors.
+
 ## 1.0.2
 
 - **Label Overflow & Auto-Fitting**: Automatic horizontal spacing, boundary clipping, and tail truncation (`...`) preventing long text overlapping adjacent tabs.

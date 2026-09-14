@@ -1,3 +1,10 @@
+## 1.0.1
+
+- **Easy Named Constructors**: Added `.svg()`, `.icon()`, `.asset()`, and `.symbol()` constructors to `NativeLiquidGlassNavBarItem` and `NativeLiquidGlassActionButton`.
+- **Optical Sizing Optimization**: Calibrated vector SVG and `IconData` font rasterization scale to match native iOS SF Symbols.
+- **Dynamic Theming Controls**: Added custom `iconSize`, `fontSize`, `tintColor`, and `unselectedColor` customization.
+- **Translucent Mesh Background Example**: Added interactive background switcher to demo the live liquid glass blur effect.
+
 ## 1.0.0
 
 - Initial release of `native_liquid_glass_navbar`.

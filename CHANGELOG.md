@@ -1,3 +1,13 @@
+## 1.0.5
+
+- **Direct GitHub CDN Asset Links**: Updated showcase image links in documentation to point to direct raw GitHub URLs for reliable rendering on pub.dev and online package catalogs.
+- **Polished Visual Showcase**: Enhanced the visual layout and responsive presentation of Light Theme, Dark Theme, and Cross-Platform Fallback previews.
+
+## 1.0.4
+
+- **Visual Showcase & Themes Documentation**: Added full side-by-side screenshots demonstrating iOS Light Theme, iOS Dark Theme, and the Cross-Platform Glass Fallback.
+- **Theme & Fallback Highlights**: Comprehensive documentation detailing authentic iOS liquid glass blur, automatic dark/light theme switching, active tint color customization, and cross-platform frosted glass capabilities.
+
 ## 1.0.3
 
 - **High-End Built-in Glass Fallback**: Premium floating frosted-glass navbar with smooth animated sliding indicator pill for Android, Web, macOS, Linux, and Windows.

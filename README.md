@@ -12,8 +12,8 @@ This package uses [platform views and method channels](https://docs.flutter.dev/
 
 | ☀️ iOS Light Theme | 🌙 iOS Dark Theme | 🚀 Cross-Platform Fallback |
 | :---: | :---: | :---: |
-| <img src="example/assets/white_theme_navbar.png" width="260" alt="iOS Light Theme Liquid Glass Navbar" /> | <img src="example/assets/dark_theme_navbar.png" width="260" alt="iOS Dark Theme Liquid Glass Navbar" /> | <img src="example/assets/fallback_navbar.png" width="260" alt="Cross-Platform Glass Fallback Navbar" /> |
-| **Authentic iOS Light Blur**<br>• Crisp Custom SVGs & PNGs<br>• Dynamic Mesh Underlay<br>• Floating Quick Action Button | **Deep Liquid Dark Blur**<br>• Custom Accent & Tinting<br>• High-contrast Retina Icons<br>• Native iOS `UITabBar` Fluidity | **Glassmorphism for All Platforms**<br>• Android, Web & Desktop ready<br>• Smooth Animated Sliding Pill<br>• Frosted Backdrop Blur (Sigma 25) |
+| <img src="https://raw.githubusercontent.com/bakarflutter/glass_nav_bar/main/example/assets/white_theme_navbar.png" width="270" alt="iOS Light Theme Liquid Glass Navbar" /> | <img src="https://raw.githubusercontent.com/bakarflutter/glass_nav_bar/main/example/assets/dark_theme_navbar.png" width="270" alt="iOS Dark Theme Liquid Glass Navbar" /> | <img src="https://raw.githubusercontent.com/bakarflutter/glass_nav_bar/main/example/assets/fallback_navbar.png" width="270" alt="Cross-Platform Glass Fallback Navbar" /> |
+| **Authentic iOS Light Blur**<br>• Crisp Vector SVGs & PNGs<br>• Dynamic Live Mesh Underlay<br>• Floating Quick Action Pill | **Deep Liquid Dark Blur**<br>• Custom Accent & Tinting<br>• High-contrast Retina Icons<br>• Native iOS `UITabBar` Fluidity | **Glassmorphism for All Platforms**<br>• Android, Web & Desktop Ready<br>• Smooth Animated Sliding Pill<br>• Frosted Backdrop Blur (Sigma 25) |
 
 </div>
 
@@ -59,7 +59,7 @@ Add `native_liquid_glass_navbar` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  native_liquid_glass_navbar: ^1.0.3
+  native_liquid_glass_navbar: ^1.0.5
 ```
 
 Run `flutter pub get`.

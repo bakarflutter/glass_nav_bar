@@ -187,7 +187,8 @@ class NativeLiquidGlassNavBar extends StatefulWidget {
        );
 
   @override
-  State<NativeLiquidGlassNavBar> createState() => _NativeLiquidGlassNavBarState();
+  State<NativeLiquidGlassNavBar> createState() =>
+      _NativeLiquidGlassNavBarState();
 }
 
 /// Backwards compatibility alias for [NativeLiquidGlassNavBar].
@@ -352,23 +353,31 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
   Widget _buildDefaultFallback(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final bool isDark = theme.brightness == Brightness.dark;
-    final Color selectedColor =
-        widget.tintColor ?? theme.colorScheme.primary;
+    final Color selectedColor = widget.tintColor ?? theme.colorScheme.primary;
     final Color unselectedColor =
-        widget.unselectedColor ?? (isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93));
+        widget.unselectedColor ??
+        (isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93));
     final double defaultIconSize = widget.iconSize ?? 26.0;
     final double defaultFontSize = widget.fontSize ?? 12.0;
 
     final int totalTabs = widget.tabs.length;
     final int safeIndex = widget.currentIndex.clamp(0, totalTabs - 1);
-    final int totalSlots = widget.tabs.length + (widget.actionButton != null ? 1 : 0);
+    final int totalSlots =
+        widget.tabs.length + (widget.actionButton != null ? 1 : 0);
     final double alignmentX = totalSlots <= 1
         ? 0.0
         : -1.0 + (safeIndex / (totalSlots - 1)) * 2.0;
 
+    final double bottomInset = MediaQuery.of(context).padding.bottom;
+    final double bottomMargin = bottomInset > 0 ? 6.0 : 16.0;
+
     return SafeArea(
+      top: false,
+      left: false,
+      right: false,
+      bottom: true,
       child: Container(
-        margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, bottomMargin),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
           boxShadow: [
@@ -455,7 +464,8 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
                         final int index = entry.key;
                         final NativeLiquidGlassNavBarItem tab = entry.value;
                         final bool isSelected = safeIndex == index;
-                        final double tabIconSize = tab.iconSize ?? defaultIconSize;
+                        final double tabIconSize =
+                            tab.iconSize ?? defaultIconSize;
 
                         return Expanded(
                           child: GestureDetector(
@@ -470,7 +480,9 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
                                 children: [
                                   _buildTabIconWidget(
                                     tab: tab,
-                                    color: isSelected ? selectedColor : unselectedColor,
+                                    color: isSelected
+                                        ? selectedColor
+                                        : unselectedColor,
                                     size: tabIconSize,
                                   ),
                                   const SizedBox(height: 4),
@@ -480,14 +492,16 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: defaultFontSize,
-                                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
                                       color: isDark
                                           ? (isSelected
-                                              ? Colors.white
-                                              : const Color(0xFF8E8E93))
+                                                ? Colors.white
+                                                : const Color(0xFF8E8E93))
                                           : (isSelected
-                                              ? const Color(0xFF111827)
-                                              : const Color(0xFF3C3C43)),
+                                                ? const Color(0xFF111827)
+                                                : const Color(0xFF3C3C43)),
                                     ),
                                   ),
                                 ],
@@ -516,7 +530,9 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
                                       color: selectedColor,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: selectedColor.withValues(alpha: 0.4),
+                                          color: selectedColor.withValues(
+                                            alpha: 0.4,
+                                          ),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         ),
@@ -526,7 +542,8 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
                                     child: _buildActionIconWidget(
                                       actionButton: widget.actionButton!,
                                       color: Colors.white,
-                                      size: widget.actionButton!.iconSize ?? 20.0,
+                                      size:
+                                          widget.actionButton!.iconSize ?? 20.0,
                                     ),
                                   ),
                                 ],

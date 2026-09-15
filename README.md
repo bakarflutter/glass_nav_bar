@@ -6,11 +6,36 @@ This package uses [platform views and method channels](https://docs.flutter.dev/
 
 ---
 
-## Showcase & Highlights
+## 📱 Visual Showcase & Themes
 
-| 💎 Liquid Glass & SVGs | 🌈 Live Mesh Translucency | 🔘 Quick Action Button |
-| :--- | :--- | :--- |
-| **Authentic Apple Blur**<br>Native `UITabBar` rendering with zero frame drops | **Retina Vector SVGs**<br>High-resolution rasterization for pixel-perfect clarity | **Floating Action Pill**<br>Circular action button for quick adds & media triggers |
+<div align="center">
+
+| ☀️ iOS Light Theme | 🌙 iOS Dark Theme | 🚀 Cross-Platform Fallback |
+| :---: | :---: | :---: |
+| <img src="example/assets/white_theme_navbar.png" width="260" alt="iOS Light Theme Liquid Glass Navbar" /> | <img src="example/assets/dark_theme_navbar.png" width="260" alt="iOS Dark Theme Liquid Glass Navbar" /> | <img src="example/assets/fallback_navbar.png" width="260" alt="Cross-Platform Glass Fallback Navbar" /> |
+| **Authentic iOS Light Blur**<br>• Crisp Custom SVGs & PNGs<br>• Dynamic Mesh Underlay<br>• Floating Quick Action Button | **Deep Liquid Dark Blur**<br>• Custom Accent & Tinting<br>• High-contrast Retina Icons<br>• Native iOS `UITabBar` Fluidity | **Glassmorphism for All Platforms**<br>• Android, Web & Desktop ready<br>• Smooth Animated Sliding Pill<br>• Frosted Backdrop Blur (Sigma 25) |
+
+</div>
+
+---
+
+## 🌟 Key Highlights & Theming
+
+### ☀️ Light Theme (Liquid Glass)
+- **Authentic Apple Vibrancy**: Uses native iOS glass materials that dynamically sample the colors and gradients passing beneath the navigation bar.
+- **Retina Crisp Vector SVGs**: High-resolution vector rasterization ensuring pixel-perfect clarity without blurriness on @2x and @3x screens.
+- **Floating Action Pill**: Sleek circular action button for central actions (e.g. Create, Add, Camera) seamlessly integrated into the navigation bar hierarchy.
+
+### 🌙 Dark Theme (Deep Translucency)
+- **Automatic System & App Theme Adaptation**: Automatically responds to iOS Dark Mode and Flutter `ThemeData.brightness`.
+- **Dynamic Active Tinting**: Customize active tab colors (`tintColor`) and unselected states (`unselectedColor`) with seamless color transitions.
+- **Zero Frame Drops**: Completely offloaded to native `UITabBar` rendering for rock-solid 60/120 FPS performance.
+
+### 🚀 Cross-Platform Fallback (Android, Web & Desktop)
+- **Built-in Frosted Glass Container**: Features backdrop glassmorphic blur (`ImageFilter.blur(sigmaX: 25, sigmaY: 25)`), dynamic glass borders, and subtle elevation shadows.
+- **Interactive Sliding Pill Indicator**: Smooth spring-animated pill indicator tracks active tab transitions across all non-iOS platforms.
+- **100% Feature Parity**: Full support for custom SVGs, PNG assets, Flutter `IconData`, custom sizes, and action buttons without any extra configuration.
+- **Custom Fallback Widget Support**: Easily plug in a custom Material 3 `NavigationBar` or any widget via the `fallback:` parameter.
 
 ---
 

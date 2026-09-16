@@ -192,12 +192,16 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
 
   Future<Uint8List?> _rasterizeSvg(String assetPath, {double size = 96}) async {
     try {
-      final PictureInfo pictureInfo =
-          await vg.loadPicture(SvgAssetLoader(assetPath), null);
-      final double srcW =
-          pictureInfo.size.width > 0 ? pictureInfo.size.width : 24.0;
-      final double srcH =
-          pictureInfo.size.height > 0 ? pictureInfo.size.height : 24.0;
+      final PictureInfo pictureInfo = await vg.loadPicture(
+        SvgAssetLoader(assetPath),
+        null,
+      );
+      final double srcW = pictureInfo.size.width > 0
+          ? pictureInfo.size.width
+          : 24.0;
+      final double srcH = pictureInfo.size.height > 0
+          ? pictureInfo.size.height
+          : 24.0;
       final double scaleX = size / srcW;
       final double scaleY = size / srcH;
 
@@ -207,10 +211,13 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
       canvas.drawPicture(pictureInfo.picture);
       final ui.Picture scaledPicture = recorder.endRecording();
 
-      final ui.Image image =
-          await scaledPicture.toImage(size.toInt(), size.toInt());
-      final ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      final ui.Image image = await scaledPicture.toImage(
+        size.toInt(),
+        size.toInt(),
+      );
+      final ByteData? byteData = await image.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
 
       pictureInfo.picture.dispose();
       scaledPicture.dispose();
@@ -238,48 +245,48 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-              Container(
-                width: 40,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Quick Action Modal',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Triggered by the floating Action Button',
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 24),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: widget.tintColor.withValues(alpha: 0.15),
-                  child: Icon(
-                    Icons.add_photo_alternate_rounded,
-                    color: widget.tintColor,
+                Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                title: const Text('Upload Vector SVG / PNG'),
-                subtitle: const Text('Add icons dynamically to navigation'),
-                onTap: () => Navigator.pop(ctx),
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: widget.tintColor.withValues(alpha: 0.15),
-                  child: Icon(Icons.palette_rounded, color: widget.tintColor),
+                const SizedBox(height: 20),
+                const Text(
+                  'Quick Action Modal',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                title: const Text('Change Glass Theme'),
-                subtitle: const Text(
-                  'Toggle blur effects and liquid glass styling',
+                const SizedBox(height: 8),
+                const Text(
+                  'Triggered by the floating Action Button',
+                  style: TextStyle(color: Colors.grey),
                 ),
-                onTap: () => Navigator.pop(ctx),
-              ),
+                const SizedBox(height: 24),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: widget.tintColor.withValues(alpha: 0.15),
+                    child: Icon(
+                      Icons.add_photo_alternate_rounded,
+                      color: widget.tintColor,
+                    ),
+                  ),
+                  title: const Text('Upload Vector SVG / PNG'),
+                  subtitle: const Text('Add icons dynamically to navigation'),
+                  onTap: () => Navigator.pop(ctx),
+                ),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: widget.tintColor.withValues(alpha: 0.15),
+                    child: Icon(Icons.palette_rounded, color: widget.tintColor),
+                  ),
+                  title: const Text('Change Glass Theme'),
+                  subtitle: const Text(
+                    'Toggle blur effects and liquid glass styling',
+                  ),
+                  onTap: () => Navigator.pop(ctx),
+                ),
               ],
             ),
           ),
@@ -309,10 +316,7 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               'assets/icons/home.svg',
               width: 24,
               height: 24,
-              colorFilter: ColorFilter.mode(
-                widget.tintColor,
-                BlendMode.srcIn,
-              ),
+              colorFilter: ColorFilter.mode(widget.tintColor, BlendMode.srcIn),
             ),
           ),
           NativeLiquidGlassNavBarItem.widget(
@@ -331,10 +335,7 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               'assets/icons/search.svg',
               width: 24,
               height: 24,
-              colorFilter: ColorFilter.mode(
-                widget.tintColor,
-                BlendMode.srcIn,
-              ),
+              colorFilter: ColorFilter.mode(widget.tintColor, BlendMode.srcIn),
             ),
           ),
           NativeLiquidGlassNavBarItem.widget(
@@ -353,10 +354,7 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               'assets/icons/heart.svg',
               width: 24,
               height: 24,
-              colorFilter: ColorFilter.mode(
-                widget.tintColor,
-                BlendMode.srcIn,
-              ),
+              colorFilter: ColorFilter.mode(widget.tintColor, BlendMode.srcIn),
             ),
           ),
           NativeLiquidGlassNavBarItem.widget(
@@ -375,10 +373,7 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               'assets/icons/settings.svg',
               width: 24,
               height: 24,
-              colorFilter: ColorFilter.mode(
-                widget.tintColor,
-                BlendMode.srcIn,
-              ),
+              colorFilter: ColorFilter.mode(widget.tintColor, BlendMode.srcIn),
             ),
           ),
         ];

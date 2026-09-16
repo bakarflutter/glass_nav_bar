@@ -8,7 +8,7 @@ void main() {
 
 enum BackgroundStyle { vibrantMesh, auroraGlow, minimalSolid }
 
-enum IconSourceMode { widgets, iconData, symbols }
+enum IconSourceMode { svgs, pngs, iconData, symbols }
 
 class LiquidGlassApp extends StatefulWidget {
   const LiquidGlassApp({super.key});
@@ -24,7 +24,7 @@ class _LiquidGlassAppState extends State<LiquidGlassApp> {
   double _iconSize = 26.0;
   double _fontSize = 10.0;
   BackgroundStyle _backgroundStyle = BackgroundStyle.vibrantMesh;
-  IconSourceMode _iconSourceMode = IconSourceMode.widgets;
+  IconSourceMode _iconSourceMode = IconSourceMode.svgs;
 
   void _updateThemeMode(ThemeMode mode) {
     setState(() => _themeMode = mode);
@@ -206,8 +206,8 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
 
   List<NativeLiquidGlassNavBarItem> _buildTabs() {
     switch (widget.iconSourceMode) {
-      case IconSourceMode.widgets:
-        // Direct custom Flutter Widget support (e.g. SvgPicture from your app, Image.asset, etc.)
+      case IconSourceMode.svgs:
+        // Demonstrates using Vector SVGs via iconWidget & selectedIconWidget
         return [
           NativeLiquidGlassNavBarItem.widget(
             label: 'Home',
@@ -298,6 +298,74 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
             symbol: 'gearshape.fill',
           ),
         ];
+      case IconSourceMode.pngs:
+        // Demonstrates using PNG Images via iconWidget & selectedIconWidget
+        return [
+          NativeLiquidGlassNavBarItem.widget(
+            label: 'Home',
+            iconWidget: Image.asset(
+              'assets/icons/home.png',
+              width: 24,
+              height: 24,
+              color: widget.unselectedColor,
+            ),
+            selectedIconWidget: Image.asset(
+              'assets/icons/home.png',
+              width: 24,
+              height: 24,
+              color: widget.tintColor,
+            ),
+            symbol: 'house.fill',
+          ),
+          NativeLiquidGlassNavBarItem.widget(
+            label: 'Search',
+            iconWidget: Image.asset(
+              'assets/icons/search.png',
+              width: 24,
+              height: 24,
+              color: widget.unselectedColor,
+            ),
+            selectedIconWidget: Image.asset(
+              'assets/icons/search.png',
+              width: 24,
+              height: 24,
+              color: widget.tintColor,
+            ),
+            symbol: 'magnifyingglass',
+          ),
+          NativeLiquidGlassNavBarItem.widget(
+            label: 'Saved',
+            iconWidget: Image.asset(
+              'assets/icons/heart.png',
+              width: 24,
+              height: 24,
+              color: widget.unselectedColor,
+            ),
+            selectedIconWidget: Image.asset(
+              'assets/icons/heart.png',
+              width: 24,
+              height: 24,
+              color: widget.tintColor,
+            ),
+            symbol: 'heart.fill',
+          ),
+          NativeLiquidGlassNavBarItem.widget(
+            label: 'Settings',
+            iconWidget: Image.asset(
+              'assets/icons/settings.png',
+              width: 24,
+              height: 24,
+              color: widget.unselectedColor,
+            ),
+            selectedIconWidget: Image.asset(
+              'assets/icons/settings.png',
+              width: 24,
+              height: 24,
+              color: widget.tintColor,
+            ),
+            symbol: 'gearshape.fill',
+          ),
+        ];
       case IconSourceMode.iconData:
         return const [
           NativeLiquidGlassNavBarItem.icon(
@@ -345,13 +413,24 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
 
   NativeLiquidGlassActionButton _buildActionButton() {
     switch (widget.iconSourceMode) {
-      case IconSourceMode.widgets:
+      case IconSourceMode.svgs:
         return NativeLiquidGlassActionButton.widget(
           iconWidget: SvgPicture.asset(
             'assets/icons/plus.svg',
             width: 20,
             height: 20,
             colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          ),
+          symbol: 'plus',
+          onTap: _openCreateModal,
+        );
+      case IconSourceMode.pngs:
+        return NativeLiquidGlassActionButton.widget(
+          iconWidget: Image.asset(
+            'assets/icons/plus.png',
+            width: 20,
+            height: 20,
+            color: Colors.white,
           ),
           symbol: 'plus',
           onTap: _openCreateModal,
@@ -787,9 +866,14 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                       SegmentedButton<IconSourceMode>(
                         segments: const [
                           ButtonSegment(
-                            value: IconSourceMode.widgets,
-                            label: Text('Widgets (SVGs)'),
-                            icon: Icon(Icons.widgets_rounded),
+                            value: IconSourceMode.svgs,
+                            label: Text('SVGs'),
+                            icon: Icon(Icons.brush_rounded),
+                          ),
+                          ButtonSegment(
+                            value: IconSourceMode.pngs,
+                            label: Text('PNGs'),
+                            icon: Icon(Icons.image_rounded),
                           ),
                           ButtonSegment(
                             value: IconSourceMode.iconData,

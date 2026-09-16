@@ -1,4 +1,4 @@
-## 1.1.2
+## 1.1.3
 
 - **Retina-Scale Vector SVG Rasterization**: Fixed SVG vector scaling in the example rasterizer to ensure SVG icons fill the full tab item dimensions with crisp retina resolution on iOS and Android.
 - **Enhanced `.widget()` Constructor**: Added `imageBytes` parameter to `NativeLiquidGlassNavBarItem.widget()` and `NativeLiquidGlassActionButton.widget()` so custom widgets (such as SVGs and PNGs) can supply high-resolution bitmap data directly for native iOS `UITabBar` rendering.

@@ -56,7 +56,7 @@ Add `native_liquid_glass_navbar` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  native_liquid_glass_navbar: ^1.1.2
+  native_liquid_glass_navbar: ^1.1.3
 ```
 
 Then run:

@@ -1,8 +1,26 @@
 # native_liquid_glass_navbar
 
-A high-performance, **zero-dependency** Flutter plugin bringing the authentic iOS **Liquid Glass** navigation bar to Flutter apps with complete support for **PNG Images**, **Vector SVGs**, **Flutter Icons**, and **Apple SF Symbols**.
+<div align="center">
 
-This package renders the native iOS `UITabBar` on iOS devices for authentic Apple Liquid Glass blur, haptics, fluidity, and system styling, while automatically providing a smooth frosted-glass navigation bar on Android, Web, and Desktop.
+[![pub package](https://img.shields.io/pub/v/native_liquid_glass_navbar.svg?logo=dart&logoColor=white)](https://pub.dev/packages/native_liquid_glass_navbar)
+[![platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20Android%20%7C%20Web%20%7C%20Desktop-40C4FF?logo=flutter)](https://pub.dev/packages/native_liquid_glass_navbar)
+[![license](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![likes](https://img.shields.io/pub/likes/native_liquid_glass_navbar?logo=dart)](https://pub.dev/packages/native_liquid_glass_navbar)
+[![popularity](https://img.shields.io/pub/popularity/native_liquid_glass_navbar?logo=dart)](https://pub.dev/packages/native_liquid_glass_navbar)
+
+A high-performance Flutter plugin bringing the authentic iOS **Liquid Glass** navigation bar to iOS and a sleek frosted-glass navigation bar to **Android**, **Web**, and **Desktop** with full support for **PNG Images**, **Vector SVGs**, **Flutter Icons**, and **Apple SF Symbols**.
+
+</div>
+
+---
+
+## 📱 Platform Architecture
+
+| Platform | Navigation Bar Implementation | Visual & Interactive Features |
+| :--- | :--- | :--- |
+| 🍏 **iOS** | Native UIKit `UITabBar` (`UiKitView`) | Authentic Apple Liquid Glass blur, native haptic feedback, fluid system styling, Apple SF Symbols & rasterized icons. |
+| 🤖 **Android** | Premium Frosted Glass Bar (Flutter Engine) | Smooth `ImageFilter.blur` (Sigma 25), animated sliding pill selection indicator, drop shadows, custom Flutter widgets, SVGs & PNGs. |
+| 🌐 **Web & Desktop** | Premium Frosted Glass Bar (Flutter Engine) | Full cross-platform responsive glassmorphic navigation bar. |
 
 ---
 
@@ -56,7 +74,7 @@ Add `native_liquid_glass_navbar` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  native_liquid_glass_navbar: ^1.1.3
+  native_liquid_glass_navbar: ^1.1.4
 ```
 
 Then run:

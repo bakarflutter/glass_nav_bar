@@ -2,7 +2,7 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - native_liquid_glass_navbar (1.0.0):
+  - native_liquid_glass_navbar (1.0.5):
     - Flutter
 
 DEPENDENCIES:
@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  native_liquid_glass_navbar: e28eb1f53a6f600b35eb6bb5c74af760b2518653
+  native_liquid_glass_navbar: 6be6ce94be7f4ecb48a374e2d5c8984e6f9edc62
 
 PODFILE CHECKSUM: d5619f92bde1b6b57393e8c11769682e26fb64a3
 

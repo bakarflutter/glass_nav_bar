@@ -1,3 +1,10 @@
+## 1.1.4
+
+- **Official Android Platform Support**: Registered native Android plugin support in `pubspec.yaml` with clean Java integration, ensuring full compatibility with modern Android Gradle Plugin (AGP 8/9+) and built-in Kotlin.
+- **Cross-Platform Safety**: Updated `LiquidGlassHelper` to use `defaultTargetPlatform` and `kIsWeb` without `dart:io` runtime dependencies for seamless web and desktop compatibility.
+- **Comprehensive Widget Tests**: Added component tests verifying fallback navigation bar rendering, animated pill transitions, and action button interaction on non-iOS platforms.
+- **Documentation & Badges**: Updated `README.md` with explicit platform architecture breakdown for iOS and Android / Cross-Platform.
+
 ## 1.1.3
 
 - **Retina-Scale Vector SVG Rasterization**: Fixed SVG vector scaling in the example rasterizer to ensure SVG icons fill the full tab item dimensions with crisp retina resolution on iOS and Android.

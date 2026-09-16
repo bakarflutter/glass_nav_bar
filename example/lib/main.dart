@@ -8,7 +8,7 @@ void main() {
 
 enum BackgroundStyle { vibrantMesh, auroraGlow, minimalSolid }
 
-enum IconSourceMode { svgs, pngs, iconData, symbols }
+enum IconSourceMode { widgets, iconData, symbols }
 
 class LiquidGlassApp extends StatefulWidget {
   const LiquidGlassApp({super.key});
@@ -24,7 +24,7 @@ class _LiquidGlassAppState extends State<LiquidGlassApp> {
   double _iconSize = 26.0;
   double _fontSize = 10.0;
   BackgroundStyle _backgroundStyle = BackgroundStyle.vibrantMesh;
-  IconSourceMode _iconSourceMode = IconSourceMode.svgs;
+  IconSourceMode _iconSourceMode = IconSourceMode.widgets;
 
   void _updateThemeMode(ThemeMode mode) {
     setState(() => _themeMode = mode);
@@ -206,10 +206,10 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
 
   List<NativeLiquidGlassNavBarItem> _buildTabs() {
     switch (widget.iconSourceMode) {
-      case IconSourceMode.svgs:
-        // Demonstrates using custom SVG widgets directly via iconWidget (using flutter_svg in the app)
+      case IconSourceMode.widgets:
+        // Direct custom Flutter Widget support (e.g. SvgPicture from your app, Image.asset, etc.)
         return [
-          NativeLiquidGlassNavBarItem(
+          NativeLiquidGlassNavBarItem.widget(
             label: 'Home',
             iconWidget: SvgPicture.asset(
               'assets/icons/home.svg',
@@ -230,9 +230,8 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               ),
             ),
             symbol: 'house.fill',
-            assetPath: 'assets/icons/home.png',
           ),
-          NativeLiquidGlassNavBarItem(
+          NativeLiquidGlassNavBarItem.widget(
             label: 'Search',
             iconWidget: SvgPicture.asset(
               'assets/icons/search.svg',
@@ -253,9 +252,8 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               ),
             ),
             symbol: 'magnifyingglass',
-            assetPath: 'assets/icons/search.png',
           ),
-          NativeLiquidGlassNavBarItem(
+          NativeLiquidGlassNavBarItem.widget(
             label: 'Saved',
             iconWidget: SvgPicture.asset(
               'assets/icons/heart.svg',
@@ -276,9 +274,8 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               ),
             ),
             symbol: 'heart.fill',
-            assetPath: 'assets/icons/heart.png',
           ),
-          NativeLiquidGlassNavBarItem(
+          NativeLiquidGlassNavBarItem.widget(
             label: 'Settings',
             iconWidget: SvgPicture.asset(
               'assets/icons/settings.svg',
@@ -299,53 +296,45 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
               ),
             ),
             symbol: 'gearshape.fill',
-            assetPath: 'assets/icons/settings.png',
-          ),
-        ];
-      case IconSourceMode.pngs:
-        // Bundled PNG Image Assets
-        return const [
-          NativeLiquidGlassNavBarItem(
-            label: 'Home',
-            assetPath: 'assets/icons/home.png',
-          ),
-          NativeLiquidGlassNavBarItem(
-            label: 'Search',
-            assetPath: 'assets/icons/search.png',
-          ),
-          NativeLiquidGlassNavBarItem(
-            label: 'Saved',
-            assetPath: 'assets/icons/heart.png',
-          ),
-          NativeLiquidGlassNavBarItem(
-            label: 'Settings',
-            assetPath: 'assets/icons/settings.png',
           ),
         ];
       case IconSourceMode.iconData:
         return const [
-          NativeLiquidGlassNavBarItem(label: 'Home', icon: Icons.home_rounded),
-          NativeLiquidGlassNavBarItem(
+          NativeLiquidGlassNavBarItem.icon(
+            label: 'Home',
+            icon: Icons.home_rounded,
+            symbol: 'house.fill',
+          ),
+          NativeLiquidGlassNavBarItem.icon(
             label: 'Search',
             icon: Icons.search_rounded,
+            symbol: 'magnifyingglass',
           ),
-          NativeLiquidGlassNavBarItem(
+          NativeLiquidGlassNavBarItem.icon(
             label: 'Saved',
             icon: Icons.favorite_rounded,
+            symbol: 'heart.fill',
           ),
-          NativeLiquidGlassNavBarItem(
+          NativeLiquidGlassNavBarItem.icon(
             label: 'Settings',
             icon: Icons.tune_rounded,
+            symbol: 'gearshape.fill',
           ),
         ];
       case IconSourceMode.symbols:
         return const [
-          NativeLiquidGlassNavBarItem(label: 'Home', symbol: 'house.fill'),
+          NativeLiquidGlassNavBarItem.symbol(
+            label: 'Home',
+            symbol: 'house.fill',
+          ),
           NativeLiquidGlassNavBarItem(
             label: 'Search',
             symbol: 'magnifyingglass',
           ),
-          NativeLiquidGlassNavBarItem(label: 'Saved', symbol: 'heart.fill'),
+          NativeLiquidGlassNavBarItem(
+            label: 'Saved',
+            symbol: 'heart.fill',
+          ),
           NativeLiquidGlassNavBarItem(
             label: 'Settings',
             symbol: 'gearshape.fill',
@@ -356,8 +345,8 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
 
   NativeLiquidGlassActionButton _buildActionButton() {
     switch (widget.iconSourceMode) {
-      case IconSourceMode.svgs:
-        return NativeLiquidGlassActionButton(
+      case IconSourceMode.widgets:
+        return NativeLiquidGlassActionButton.widget(
           iconWidget: SvgPicture.asset(
             'assets/icons/plus.svg',
             width: 20,
@@ -365,21 +354,16 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
             colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
           symbol: 'plus',
-          assetPath: 'assets/icons/plus.png',
-          onTap: _openCreateModal,
-        );
-      case IconSourceMode.pngs:
-        return NativeLiquidGlassActionButton(
-          assetPath: 'assets/icons/plus.png',
           onTap: _openCreateModal,
         );
       case IconSourceMode.iconData:
-        return NativeLiquidGlassActionButton(
+        return NativeLiquidGlassActionButton.icon(
           icon: Icons.add_rounded,
+          symbol: 'plus',
           onTap: _openCreateModal,
         );
       case IconSourceMode.symbols:
-        return NativeLiquidGlassActionButton(
+        return NativeLiquidGlassActionButton.symbol(
           symbol: 'plus',
           onTap: _openCreateModal,
         );
@@ -803,19 +787,14 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
                       SegmentedButton<IconSourceMode>(
                         segments: const [
                           ButtonSegment(
-                            value: IconSourceMode.svgs,
-                            label: Text('SVGs'),
-                            icon: Icon(Icons.brush_rounded),
-                          ),
-                          ButtonSegment(
-                            value: IconSourceMode.pngs,
-                            label: Text('PNGs'),
-                            icon: Icon(Icons.image_rounded),
+                            value: IconSourceMode.widgets,
+                            label: Text('Widgets (SVGs)'),
+                            icon: Icon(Icons.widgets_rounded),
                           ),
                           ButtonSegment(
                             value: IconSourceMode.iconData,
                             label: Text('Icons'),
-                            icon: Icon(Icons.widgets_rounded),
+                            icon: Icon(Icons.star_rounded),
                           ),
                           ButtonSegment(
                             value: IconSourceMode.symbols,

@@ -1,4 +1,4 @@
-/// A Flutter plugin that provides a native liquid glass navigation bar for iOS with custom widget, PNG, and icon support.
+/// A Flutter plugin providing a native iOS Liquid Glass navigation bar with custom Flutter widget, IconData, and SF Symbol support.
 library;
 
 export 'liquid_glass_helper.dart';
@@ -22,53 +22,46 @@ class NativeLiquidGlassNavBarItem {
   /// An optional custom Flutter [Widget] to render when this tab is currently selected.
   final Widget? selectedIconWidget;
 
-  /// The Flutter asset path for a custom PNG/raster icon (e.g., 'assets/icons/home.png').
-  final String? assetPath;
-
   /// A Flutter [IconData] to render as the tab icon (e.g., [Icons.home]).
   final IconData? icon;
 
+  /// The SF Symbol name or iOS asset catalog name (e.g., 'house.fill', 'gearshape.fill').
+  final String? symbol;
+
   /// Raw image byte data (PNG format).
   final Uint8List? imageBytes;
-
-  /// The SF Symbol name or iOS asset catalog name (e.g., 'house', 'gear').
-  final String? symbol;
 
   /// Optional custom icon size for this tab (defaults to navbar's [iconSize] or 24.0).
   final double? iconSize;
 
   /// Creates a new [NativeLiquidGlassNavBarItem].
   ///
-  /// Provide at least one icon source: [iconWidget], [assetPath], [icon],
-  /// [imageBytes], or [symbol].
+  /// Provide at least one icon source: [iconWidget], [icon], [symbol], or [imageBytes].
   const NativeLiquidGlassNavBarItem({
     required this.label,
     this.iconWidget,
     this.selectedIconWidget,
-    this.assetPath,
     this.icon,
-    this.imageBytes,
     this.symbol,
+    this.imageBytes,
     this.iconSize,
   }) : assert(
          iconWidget != null ||
-             assetPath != null ||
              icon != null ||
-             imageBytes != null ||
-             symbol != null,
-         'Provide at least one icon source (iconWidget, assetPath, icon, imageBytes, or symbol).',
+             symbol != null ||
+             imageBytes != null,
+         'Provide at least one icon source: iconWidget, icon, symbol, or imageBytes.',
        );
 
-  /// Creates a tab item with a custom Flutter widget (e.g., [Image.asset], `SvgPicture.asset`, custom badge).
+  /// Creates a tab item with a custom Flutter widget (e.g., [Image.asset], `SvgPicture.asset`, badges).
   const NativeLiquidGlassNavBarItem.widget({
     required this.label,
     required Widget this.iconWidget,
     this.selectedIconWidget,
     this.symbol,
-    this.assetPath,
     this.iconSize,
-  }) : icon = null,
-       imageBytes = null;
+  })  : icon = null,
+        imageBytes = null;
 
   /// Creates a tab item with a Flutter [IconData].
   const NativeLiquidGlassNavBarItem.icon({
@@ -76,32 +69,19 @@ class NativeLiquidGlassNavBarItem {
     required IconData this.icon,
     this.symbol,
     this.iconSize,
-  }) : iconWidget = null,
-       selectedIconWidget = null,
-       assetPath = null,
-       imageBytes = null;
+  })  : iconWidget = null,
+        selectedIconWidget = null,
+        imageBytes = null;
 
-  /// Creates a tab item with a PNG / raster asset path.
-  const NativeLiquidGlassNavBarItem.asset({
-    required this.label,
-    required String this.assetPath,
-    this.symbol,
-    this.iconSize,
-  }) : iconWidget = null,
-       selectedIconWidget = null,
-       icon = null,
-       imageBytes = null;
-
-  /// Creates a tab item with an Apple SF Symbol.
+  /// Creates a tab item with an Apple SF Symbol name (e.g., 'house.fill').
   const NativeLiquidGlassNavBarItem.symbol({
     required this.label,
     required String this.symbol,
     this.iconSize,
-  }) : iconWidget = null,
-       selectedIconWidget = null,
-       assetPath = null,
-       icon = null,
-       imageBytes = null;
+  })  : iconWidget = null,
+        selectedIconWidget = null,
+        icon = null,
+        imageBytes = null;
 }
 
 /// Backwards compatibility alias for [NativeLiquidGlassNavBarItem].
@@ -117,17 +97,14 @@ class NativeLiquidGlassActionButton {
   /// A custom Flutter [Widget] to render as the action button icon (e.g., [Image.asset], `SvgPicture.asset`, [Icon], etc.).
   final Widget? iconWidget;
 
-  /// The Flutter asset path for a custom PNG/raster icon (e.g., 'assets/icons/plus.png').
-  final String? assetPath;
-
   /// A Flutter [IconData] to render as the action button icon (e.g., [Icons.add]).
   final IconData? icon;
 
-  /// Raw image byte data (PNG format).
-  final Uint8List? imageBytes;
-
   /// The SF Symbol name or iOS asset catalog name (e.g., 'plus').
   final String? symbol;
+
+  /// Raw image byte data (PNG format).
+  final Uint8List? imageBytes;
 
   /// Optional custom icon size for this action button.
   final double? iconSize;
@@ -137,34 +114,30 @@ class NativeLiquidGlassActionButton {
 
   /// Creates a new [NativeLiquidGlassActionButton].
   ///
-  /// Provide at least one icon source: [iconWidget], [assetPath], [icon],
-  /// [imageBytes], or [symbol].
+  /// Provide at least one icon source: [iconWidget], [icon], [symbol], or [imageBytes].
   const NativeLiquidGlassActionButton({
     this.iconWidget,
-    this.assetPath,
     this.icon,
-    this.imageBytes,
     this.symbol,
+    this.imageBytes,
     this.iconSize,
     required this.onTap,
   }) : assert(
          iconWidget != null ||
-             assetPath != null ||
              icon != null ||
-             imageBytes != null ||
-             symbol != null,
-         'Provide at least one icon source (iconWidget, assetPath, icon, imageBytes, or symbol).',
+             symbol != null ||
+             imageBytes != null,
+         'Provide at least one icon source: iconWidget, icon, symbol, or imageBytes.',
        );
 
   /// Creates an action button with a custom Flutter widget.
   const NativeLiquidGlassActionButton.widget({
     required Widget this.iconWidget,
     this.symbol,
-    this.assetPath,
     this.iconSize,
     required this.onTap,
-  }) : icon = null,
-       imageBytes = null;
+  })  : icon = null,
+        imageBytes = null;
 
   /// Creates an action button with a Flutter [IconData].
   const NativeLiquidGlassActionButton.icon({
@@ -172,29 +145,17 @@ class NativeLiquidGlassActionButton {
     this.symbol,
     this.iconSize,
     required this.onTap,
-  }) : iconWidget = null,
-       assetPath = null,
-       imageBytes = null;
-
-  /// Creates an action button with a PNG / raster asset path.
-  const NativeLiquidGlassActionButton.asset({
-    required String this.assetPath,
-    this.symbol,
-    this.iconSize,
-    required this.onTap,
-  }) : iconWidget = null,
-       icon = null,
-       imageBytes = null;
+  })  : iconWidget = null,
+        imageBytes = null;
 
   /// Creates an action button with an Apple SF Symbol.
   const NativeLiquidGlassActionButton.symbol({
     required String this.symbol,
     this.iconSize,
     required this.onTap,
-  }) : iconWidget = null,
-       assetPath = null,
-       icon = null,
-       imageBytes = null;
+  })  : iconWidget = null,
+        icon = null,
+        imageBytes = null;
 }
 
 /// Backwards compatibility alias for [NativeLiquidGlassActionButton].
@@ -298,7 +259,6 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
     final List<Uint8List?> tabImages = await Future.wait(
       widget.tabs.map(
         (tab) => GlassIconLoader.resolveImageBytes(
-          assetPath: tab.assetPath,
           icon: tab.icon,
           imageBytes: tab.imageBytes,
           targetWidth: tab.iconSize ?? defaultSize,
@@ -311,7 +271,6 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
     if (widget.actionButton != null) {
       final double actionSize = widget.actionButton!.iconSize ?? defaultSize;
       actionImg = await GlassIconLoader.resolveImageBytes(
-        assetPath: widget.actionButton!.assetPath,
         icon: widget.actionButton!.icon,
         imageBytes: widget.actionButton!.imageBytes,
         targetWidth: actionSize,
@@ -376,8 +335,6 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
       content = tab.iconWidget!;
     } else if (tab.icon != null) {
       content = Icon(tab.icon, size: size, color: color);
-    } else if (tab.assetPath != null) {
-      content = Image.asset(tab.assetPath!, width: size, height: size);
     } else if (tab.imageBytes != null) {
       content = Image.memory(tab.imageBytes!, width: size, height: size);
     } else {
@@ -407,14 +364,8 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
       content = actionButton.iconWidget!;
     } else if (actionButton.icon != null) {
       content = Icon(actionButton.icon, size: size, color: color);
-    } else if (actionButton.assetPath != null) {
-      content = Image.asset(actionButton.assetPath!, width: size, height: size);
     } else if (actionButton.imageBytes != null) {
-      content = Image.memory(
-        actionButton.imageBytes!,
-        width: size,
-        height: size,
-      );
+      content = Image.memory(actionButton.imageBytes!, width: size, height: size);
     } else {
       content = Icon(Icons.add, size: size, color: color);
     }

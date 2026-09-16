@@ -1,9 +1,8 @@
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-/// Helper to render PNG assets and Flutter [IconData] into rasterized PNG bytes for native platform views.
+/// Helper to rasterize Flutter [IconData] into crisp PNG bytes for native platform views.
 class GlassIconLoader {
   GlassIconLoader._();
 
@@ -14,9 +13,8 @@ class GlassIconLoader {
     _cache.clear();
   }
 
-  /// Resolves any icon type (PNG asset, Flutter [IconData], or raw bytes) into PNG byte data.
+  /// Resolves any icon type (Flutter [IconData] or raw bytes) into PNG byte data.
   static Future<Uint8List?> resolveImageBytes({
-    String? assetPath,
     IconData? icon,
     Uint8List? imageBytes,
     double targetWidth = 24.0,
@@ -28,12 +26,7 @@ class GlassIconLoader {
       return imageBytes;
     }
 
-    // 2. PNG / Raster Asset Path (e.g. 'assets/icons/home.png')
-    if (assetPath != null && assetPath.isNotEmpty) {
-      return loadRasterAsset(assetPath);
-    }
-
-    // 3. Flutter IconData (Material, Cupertino, or custom IconData)
+    // 2. Flutter IconData (Material, Cupertino, or custom IconData)
     if (icon != null) {
       return rasterizeIconData(
         icon,
@@ -43,26 +36,6 @@ class GlassIconLoader {
     }
 
     return null;
-  }
-
-  /// Loads a raster asset (PNG, JPG, WebP) from Flutter rootBundle.
-  static Future<Uint8List?> loadRasterAsset(String assetPath) async {
-    final String cacheKey = 'asset_$assetPath';
-    if (_cache.containsKey(cacheKey)) {
-      return _cache[cacheKey];
-    }
-
-    try {
-      final ByteData byteData = await rootBundle.load(assetPath);
-      final Uint8List bytes = byteData.buffer.asUint8List();
-      _cache[cacheKey] = bytes;
-      return bytes;
-    } catch (e, stack) {
-      if (kDebugMode) {
-        debugPrint('GlassIconLoader failed to load raster asset "$assetPath": $e\n$stack');
-      }
-      return null;
-    }
   }
 
   /// Rasterizes Flutter [IconData] to high-resolution PNG bytes with proper icon centering.

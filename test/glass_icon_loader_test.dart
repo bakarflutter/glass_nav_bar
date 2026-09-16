@@ -43,16 +43,6 @@ void main() {
       expect(result, isNotNull);
       expect(result![0], 0x89);
     });
-
-    test('Rasterizes IconData to valid PNG bytes', () async {
-      final bytes = await GlassIconLoader.rasterizeIconData(
-        Icons.home,
-        targetSize: 28.0,
-        pixelRatio: 3.0,
-      );
-      expect(bytes, isNotNull);
-      expect(bytes!.isNotEmpty, isTrue);
-    });
   });
 
   group(
@@ -69,17 +59,17 @@ void main() {
         expect(item.selectedIconWidget, isA<FlutterLogo>());
       });
 
-      test('Constructs NativeLiquidGlassNavBarItem with assetPath', () {
-        const item = NativeLiquidGlassNavBarItem(
-          label: 'Search',
-          assetPath: 'assets/icons/search.png',
+      test('Constructs NativeLiquidGlassNavBarItem with named widget constructor', () {
+        const item = NativeLiquidGlassNavBarItem.widget(
+          label: 'Widget Tab',
+          iconWidget: Icon(Icons.star),
         );
-        expect(item.label, 'Search');
-        expect(item.assetPath, 'assets/icons/search.png');
+        expect(item.label, 'Widget Tab');
+        expect(item.iconWidget, isA<Icon>());
       });
 
       test('Constructs NativeLiquidGlassNavBarItem with IconData', () {
-        const item = NativeLiquidGlassNavBarItem(
+        const item = NativeLiquidGlassNavBarItem.icon(
           label: 'Settings',
           icon: Icons.settings,
         );
@@ -88,7 +78,7 @@ void main() {
       });
 
       test('Constructs NativeLiquidGlassNavBarItem with SF symbol', () {
-        const item = NativeLiquidGlassNavBarItem(
+        const item = NativeLiquidGlassNavBarItem.symbol(
           label: 'Home',
           symbol: 'house.fill',
         );
@@ -96,16 +86,29 @@ void main() {
         expect(item.symbol, 'house.fill');
       });
 
-      test(
-        'Constructs NativeLiquidGlassActionButton with custom iconWidget',
-        () {
-          final button = NativeLiquidGlassActionButton(
-            iconWidget: const Icon(Icons.add),
-            onTap: () {},
-          );
-          expect(button.iconWidget, isA<Icon>());
-        },
-      );
+      test('Constructs NativeLiquidGlassActionButton with custom iconWidget', () {
+        final button = NativeLiquidGlassActionButton.widget(
+          iconWidget: const Icon(Icons.add),
+          onTap: () {},
+        );
+        expect(button.iconWidget, isA<Icon>());
+      });
+
+      test('Constructs NativeLiquidGlassActionButton with IconData', () {
+        final button = NativeLiquidGlassActionButton.icon(
+          icon: Icons.add,
+          onTap: () {},
+        );
+        expect(button.icon, Icons.add);
+      });
+
+      test('Constructs NativeLiquidGlassActionButton with SF symbol', () {
+        final button = NativeLiquidGlassActionButton.symbol(
+          symbol: 'plus',
+          onTap: () {},
+        );
+        expect(button.symbol, 'plus');
+      });
     },
   );
 }

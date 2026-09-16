@@ -1,3 +1,10 @@
+## 1.1.1
+
+- **Simplified Pure Widget API**: Direct, clean `iconWidget` support for any custom Flutter widget (`SvgPicture.asset`, `Image.asset`, custom badges, etc.).
+- **Cleaned Up Parameters**: Removed confusing legacy asset parameters in favor of the unified `iconWidget` (for widgets/SVGs/images), `icon` (for `IconData`), and `symbol` (for native SF Symbols).
+- **Streamlined Example App**: Simplified the demo app into 3 clear modes: Custom Widgets (SVGs), Flutter `IconData`, and Apple SF Symbols.
+- **Enhanced README**: Updated documentation with simple, easy-to-read copy and clean copy-pasteable examples.
+
 ## 1.1.0
 
 - **Direct Flutter Widget Support (`iconWidget` & `selectedIconWidget`)**: Allow passing any Flutter `Widget` directly (such as `Image.asset`, `SvgPicture.asset`, custom badges, Lottie, etc.) for tab items and action buttons.

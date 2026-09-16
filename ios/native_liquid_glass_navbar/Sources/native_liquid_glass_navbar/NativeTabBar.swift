@@ -102,10 +102,15 @@ struct TabBarConfig: Equatable {
 	}
 
 	func structuralChange(from other: TabBarConfig) -> Bool {
-		return labels.count != other.labels.count
-			|| symbols.count != other.symbols.count
-			|| itemImagesData.count != other.itemImagesData.count
+		return labels != other.labels
+			|| symbols != other.symbols
+			|| itemImagesData != other.itemImagesData
 			|| (hasActionButton != other.hasActionButton)
+			|| fontSize != other.fontSize
+			|| iconSize != other.iconSize
+			|| isDark != other.isDark
+			|| tintColor != other.tintColor
+			|| unselectedColor != other.unselectedColor
 	}
 
 	private static func uiColorFromARGB(_ argb: Int) -> UIColor {
@@ -273,10 +278,21 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 	}
 
 	private func performFullRebuild() {
+		configureAppearance()
 		var controllers: [UIViewController] = []
 		let count = max(config.labels.count, max(config.symbols.count, config.itemImagesData.count))
 		let tabSize = CGSize(width: config.iconSize, height: config.iconSize)
 		let actionSize = CGSize(width: config.iconSize, height: config.iconSize)
+
+		let unselectedColor = config.unselectedColor ?? .systemGray
+		let normalAttributes: [NSAttributedString.Key: Any] = [
+			.font: UIFont.systemFont(ofSize: config.fontSize, weight: .medium),
+			.foregroundColor: unselectedColor
+		]
+		let selectedAttributes: [NSAttributedString.Key: Any] = [
+			.font: UIFont.systemFont(ofSize: config.fontSize, weight: .medium),
+			.foregroundColor: config.tintColor
+		]
 
 		// Standard Tabs
 		for i in 0..<count {
@@ -297,6 +313,8 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 				tag: i
 			)
 			dummyVC.tabBarItem.imageInsets = UIEdgeInsets(top: -1, left: 0, bottom: 1, right: 0)
+			dummyVC.tabBarItem.setTitleTextAttributes(normalAttributes, for: .normal)
+			dummyVC.tabBarItem.setTitleTextAttributes(selectedAttributes, for: .selected)
 			controllers.append(dummyVC)
 		}
 
@@ -318,6 +336,8 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 
 		self.setViewControllers(controllers, animated: false)
 		updateSelectionAndColors()
+		tabBar.setNeedsLayout()
+		tabBar.layoutIfNeeded()
 	}
 
 	private func updateSelectionAndColors() {
@@ -325,6 +345,26 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		currentAppearanceIsDark = config.isDark
 		overrideUserInterfaceStyle = config.isDark ? .dark : .light
 		configureAppearance()
+
+		if let vcs = self.viewControllers {
+			let unselectedColor = config.unselectedColor ?? .systemGray
+			let normalAttributes: [NSAttributedString.Key: Any] = [
+				.font: UIFont.systemFont(ofSize: config.fontSize, weight: .medium),
+				.foregroundColor: unselectedColor
+			]
+			let selectedAttributes: [NSAttributedString.Key: Any] = [
+				.font: UIFont.systemFont(ofSize: config.fontSize, weight: .medium),
+				.foregroundColor: config.tintColor
+			]
+			for vc in vcs {
+				vc.tabBarItem.standardAppearance = tabBar.standardAppearance
+				if #available(iOS 15.0, *) {
+					vc.tabBarItem.scrollEdgeAppearance = tabBar.scrollEdgeAppearance
+				}
+				vc.tabBarItem.setTitleTextAttributes(normalAttributes, for: .normal)
+				vc.tabBarItem.setTitleTextAttributes(selectedAttributes, for: .selected)
+			}
+		}
 
 		if self.selectedIndex != config.selectedIndex {
 			if let vcs = self.viewControllers,
@@ -334,6 +374,9 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 				self.selectedIndex = config.selectedIndex
 			}
 		}
+
+		tabBar.setNeedsLayout()
+		tabBar.layoutIfNeeded()
 	}
 
 	private func resolveImage(

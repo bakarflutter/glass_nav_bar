@@ -59,9 +59,9 @@ class NativeLiquidGlassNavBarItem {
     required Widget this.iconWidget,
     this.selectedIconWidget,
     this.symbol,
+    this.imageBytes,
     this.iconSize,
-  })  : icon = null,
-        imageBytes = null;
+  })  : icon = null;
 
   /// Creates a tab item with a Flutter [IconData].
   const NativeLiquidGlassNavBarItem.icon({
@@ -134,10 +134,10 @@ class NativeLiquidGlassActionButton {
   const NativeLiquidGlassActionButton.widget({
     required Widget this.iconWidget,
     this.symbol,
+    this.imageBytes,
     this.iconSize,
     required this.onTap,
-  })  : icon = null,
-        imageBytes = null;
+  })  : icon = null;
 
   /// Creates an action button with a Flutter [IconData].
   const NativeLiquidGlassActionButton.icon({
@@ -322,6 +322,100 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
     });
   }
 
+  static IconData _iconDataForSymbol(String? symbol) {
+    if (symbol == null || symbol.isEmpty) return Icons.circle;
+    final clean = symbol
+        .toLowerCase()
+        .replaceAll('.fill', '')
+        .replaceAll('.circle', '')
+        .replaceAll('.slash', '');
+    switch (clean) {
+      case 'house':
+      case 'home':
+        return Icons.home_rounded;
+      case 'magnifyingglass':
+      case 'search':
+        return Icons.search_rounded;
+      case 'heart':
+      case 'love':
+      case 'favorite':
+        return Icons.favorite_rounded;
+      case 'gearshape':
+      case 'gear':
+      case 'settings':
+      case 'gearshape.2':
+        return Icons.tune_rounded;
+      case 'plus':
+      case 'add':
+        return Icons.add_rounded;
+      case 'person':
+      case 'person.crop.circle':
+      case 'user':
+      case 'profile':
+        return Icons.person_rounded;
+      case 'bell':
+      case 'notification':
+        return Icons.notifications_rounded;
+      case 'star':
+        return Icons.star_rounded;
+      case 'bookmark':
+        return Icons.bookmark_rounded;
+      case 'folder':
+        return Icons.folder_rounded;
+      case 'trash':
+      case 'bin':
+        return Icons.delete_rounded;
+      case 'cart':
+      case 'bag':
+        return Icons.shopping_bag_rounded;
+      case 'envelope':
+      case 'mail':
+        return Icons.mail_rounded;
+      case 'message':
+      case 'bubble.left':
+      case 'chat':
+        return Icons.chat_bubble_rounded;
+      case 'camera':
+        return Icons.camera_alt_rounded;
+      case 'photo':
+      case 'photo.on.rectangle':
+      case 'image':
+        return Icons.image_rounded;
+      case 'music.note':
+      case 'music':
+        return Icons.music_note_rounded;
+      case 'play':
+        return Icons.play_arrow_rounded;
+      case 'pause':
+        return Icons.pause_rounded;
+      case 'square.and.arrow.up':
+      case 'share':
+        return Icons.share_rounded;
+      case 'clock':
+      case 'timer':
+        return Icons.access_time_rounded;
+      case 'calendar':
+        return Icons.calendar_month_rounded;
+      case 'map':
+      case 'location':
+      case 'mappin':
+        return Icons.location_on_rounded;
+      case 'lock':
+        return Icons.lock_rounded;
+      case 'shield':
+        return Icons.shield_rounded;
+      case 'info':
+        return Icons.info_rounded;
+      case 'checkmark':
+        return Icons.check_rounded;
+      case 'xmark':
+      case 'multiply':
+        return Icons.close_rounded;
+      default:
+        return Icons.widgets_rounded;
+    }
+  }
+
   Widget _buildTabIconWidget({
     required NativeLiquidGlassNavBarItem tab,
     required bool isSelected,
@@ -337,8 +431,10 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
       content = Icon(tab.icon, size: size, color: color);
     } else if (tab.imageBytes != null) {
       content = Image.memory(tab.imageBytes!, width: size, height: size);
+    } else if (tab.symbol != null && tab.symbol!.isNotEmpty) {
+      content = Icon(_iconDataForSymbol(tab.symbol), size: size, color: color);
     } else {
-      content = Icon(Icons.circle, size: size * 0.7, color: color);
+      content = Icon(Icons.widgets_rounded, size: size, color: color);
     }
 
     return IconTheme(
@@ -366,8 +462,14 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
       content = Icon(actionButton.icon, size: size, color: color);
     } else if (actionButton.imageBytes != null) {
       content = Image.memory(actionButton.imageBytes!, width: size, height: size);
+    } else if (actionButton.symbol != null && actionButton.symbol!.isNotEmpty) {
+      content = Icon(
+        _iconDataForSymbol(actionButton.symbol),
+        size: size,
+        color: color,
+      );
     } else {
-      content = Icon(Icons.add, size: size, color: color);
+      content = Icon(Icons.add_rounded, size: size, color: color);
     }
 
     return IconTheme(

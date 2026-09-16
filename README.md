@@ -21,15 +21,15 @@ This package renders the native iOS `UITabBar` on iOS devices for authentic Appl
 
 ## 🌟 Supported Icon & Image Formats
 
-You can pass **any image or icon** using `iconWidget`:
+You can pass any icon or image format using dedicated parameters or custom widgets:
 
-| Format / Source | How to Use | Example |
+| Format / Source | How to Use | Code Snippet |
 | :--- | :--- | :--- |
-| 🖼️ **PNG / JPG Images** | Pass `Image.asset(...)` to `iconWidget` | `iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24)` |
-| 🎨 **Vector SVGs** | Pass `SvgPicture.asset(...)` to `iconWidget` | `iconWidget: SvgPicture.asset('assets/icons/home.svg', width: 24, height: 24)` |
-| 🔣 **Flutter Icons** | Pass `Icon(...)` to `iconWidget` or use `icon:` | `iconWidget: Icon(Icons.home_rounded)` or `icon: Icons.home_rounded` |
-| 🍏 **Apple SF Symbols** | Set `symbol:` property | `symbol: 'house.fill'` |
-| 🏷️ **Badges & Custom UI** | Pass any custom `Widget` to `iconWidget` | `iconWidget: Badge(label: Text('3'), child: Icon(Icons.notifications))` |
+| 🖼️ **PNG / JPG Images** | Use `iconWidget: Image.asset(...)` or `imageBytes` | `NativeLiquidGlassNavBarItem.widget(label: 'Home', iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24))` |
+| 🎨 **Vector SVGs** | Use `iconWidget: SvgPicture.asset(...)` | `NativeLiquidGlassNavBarItem.widget(label: 'Search', iconWidget: SvgPicture.asset('assets/icons/search.svg', width: 24, height: 24))` |
+| 🔣 **Flutter Icons** | Use `icon: Icons.home_rounded` | `NativeLiquidGlassNavBarItem.icon(label: 'Home', icon: Icons.home_rounded)` |
+| 🍏 **Apple SF Symbols** | Use `symbol: 'house.fill'` | `NativeLiquidGlassNavBarItem.symbol(label: 'Home', symbol: 'house.fill')` |
+| 🏷️ **Badges & Custom UI** | Use `iconWidget: Badge(...)` | `NativeLiquidGlassNavBarItem.widget(label: 'Alerts', iconWidget: Badge(label: Text('3'), child: Icon(Icons.notifications)))` |
 
 ---
 
@@ -39,82 +39,50 @@ Add `native_liquid_glass_navbar` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  native_liquid_glass_navbar: ^1.1.1
+  native_liquid_glass_navbar: ^1.1.2
 ```
 
-Run:
+Then run:
 ```bash
 flutter pub get
 ```
 
 ---
 
-## 💡 Usage Examples
+## 💡 How to Use
 
-### 1. Using PNG Images (`Image.asset`)
+### 1. 🖼️ Using PNG Images (`Image.asset`)
 
-```dart
-NativeLiquidGlassNavBar(
-  currentIndex: _currentIndex,
-  onTap: (index) => setState(() => _currentIndex = index),
-  tabs: [
-    NativeLiquidGlassNavBarItem.widget(
-      label: 'Home',
-      iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24),
-      symbol: 'house.fill',
-    ),
-    NativeLiquidGlassNavBarItem.widget(
-      label: 'Search',
-      iconWidget: Image.asset('assets/icons/search.png', width: 24, height: 24),
-      symbol: 'magnifyingglass',
-    ),
-    NativeLiquidGlassNavBarItem.widget(
-      label: 'Saved',
-      iconWidget: Image.asset('assets/icons/heart.png', width: 24, height: 24),
-      symbol: 'heart.fill',
-    ),
-    NativeLiquidGlassNavBarItem.widget(
-      label: 'Settings',
-      iconWidget: Image.asset('assets/icons/settings.png', width: 24, height: 24),
-      symbol: 'gearshape.fill',
-    ),
-  ],
-)
-```
-
----
-
-### 2. Using Vector SVGs (`SvgPicture.asset`)
+Use `NativeLiquidGlassNavBarItem.widget()` with `Image.asset` for standard PNG icons:
 
 ```dart
 NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
   actionButton: NativeLiquidGlassActionButton.widget(
-    iconWidget: SvgPicture.asset('assets/icons/plus.svg', width: 20, height: 20),
-    symbol: 'plus',
-    onTap: () => print('Action button tapped!'),
+    iconWidget: Image.asset('assets/icons/plus.png', width: 20, height: 20, color: Colors.white),
+    onTap: () => print('Add tapped!'),
   ),
   tabs: [
     NativeLiquidGlassNavBarItem.widget(
       label: 'Home',
-      iconWidget: SvgPicture.asset('assets/icons/home.svg', width: 24, height: 24),
-      symbol: 'house.fill',
+      iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24),
+      selectedIconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24, color: Colors.blue),
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Search',
-      iconWidget: SvgPicture.asset('assets/icons/search.svg', width: 24, height: 24),
-      symbol: 'magnifyingglass',
+      iconWidget: Image.asset('assets/icons/search.png', width: 24, height: 24),
+      selectedIconWidget: Image.asset('assets/icons/search.png', width: 24, height: 24, color: Colors.blue),
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Saved',
-      iconWidget: SvgPicture.asset('assets/icons/heart.svg', width: 24, height: 24),
-      symbol: 'heart.fill',
+      iconWidget: Image.asset('assets/icons/heart.png', width: 24, height: 24),
+      selectedIconWidget: Image.asset('assets/icons/heart.png', width: 24, height: 24, color: Colors.blue),
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Settings',
-      iconWidget: SvgPicture.asset('assets/icons/settings.svg', width: 24, height: 24),
-      symbol: 'gearshape.fill',
+      iconWidget: Image.asset('assets/icons/settings.png', width: 24, height: 24),
+      selectedIconWidget: Image.asset('assets/icons/settings.png', width: 24, height: 24, color: Colors.blue),
     ),
   ],
 )
@@ -122,33 +90,152 @@ NativeLiquidGlassNavBar(
 
 ---
 
-### 3. Using Flutter Icons (`IconData` or `Icon` Widget)
+### 2. 🎨 Using Vector SVGs (`SvgPicture.asset`)
 
-You can pass `IconData` directly or pass an `Icon` widget:
+Use `flutter_svg`'s `SvgPicture.asset` inside `iconWidget` and `selectedIconWidget`:
 
 ```dart
 NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
+  actionButton: NativeLiquidGlassActionButton.widget(
+    iconWidget: SvgPicture.asset(
+      'assets/icons/plus.svg',
+      width: 20,
+      height: 20,
+      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+    ),
+    onTap: () => print('Action tapped!'),
+  ),
+  tabs: [
+    NativeLiquidGlassNavBarItem.widget(
+      label: 'Home',
+      iconWidget: SvgPicture.asset(
+        'assets/icons/home.svg',
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+      ),
+      selectedIconWidget: SvgPicture.asset(
+        'assets/icons/home.svg',
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
+      ),
+    ),
+    NativeLiquidGlassNavBarItem.widget(
+      label: 'Search',
+      iconWidget: SvgPicture.asset(
+        'assets/icons/search.svg',
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+      ),
+      selectedIconWidget: SvgPicture.asset(
+        'assets/icons/search.svg',
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
+      ),
+    ),
+    NativeLiquidGlassNavBarItem.widget(
+      label: 'Saved',
+      iconWidget: SvgPicture.asset(
+        'assets/icons/heart.svg',
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+      ),
+      selectedIconWidget: SvgPicture.asset(
+        'assets/icons/heart.svg',
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
+      ),
+    ),
+    NativeLiquidGlassNavBarItem.widget(
+      label: 'Settings',
+      iconWidget: SvgPicture.asset(
+        'assets/icons/settings.svg',
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+      ),
+      selectedIconWidget: SvgPicture.asset(
+        'assets/icons/settings.svg',
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
+      ),
+    ),
+  ],
+)
+```
+
+---
+
+### 3. 🔣 Using Flutter Icons (`IconData`)
+
+Pass standard Flutter `IconData` (Material or Cupertino icons) directly using `NativeLiquidGlassNavBarItem.icon()`:
+
+```dart
+NativeLiquidGlassNavBar(
+  currentIndex: _currentIndex,
+  onTap: (index) => setState(() => _currentIndex = index),
+  actionButton: NativeLiquidGlassActionButton.icon(
+    icon: Icons.add_rounded,
+    onTap: () => print('Add tapped!'),
+  ),
   tabs: const [
     NativeLiquidGlassNavBarItem.icon(
       label: 'Home',
       icon: Icons.home_rounded,
-      symbol: 'house.fill',
     ),
     NativeLiquidGlassNavBarItem.icon(
       label: 'Search',
       icon: Icons.search_rounded,
-      symbol: 'magnifyingglass',
     ),
     NativeLiquidGlassNavBarItem.icon(
       label: 'Saved',
       icon: Icons.favorite_rounded,
-      symbol: 'heart.fill',
     ),
     NativeLiquidGlassNavBarItem.icon(
       label: 'Settings',
       icon: Icons.tune_rounded,
+    ),
+  ],
+)
+```
+
+---
+
+### 4. 🍏 Using Apple SF Symbols (`symbol`)
+
+Pass native Apple SF Symbol names for authentic iOS rendering. On Android, Web, and Desktop, matching Material icons are automatically used as fallback:
+
+```dart
+NativeLiquidGlassNavBar(
+  currentIndex: _currentIndex,
+  onTap: (index) => setState(() => _currentIndex = index),
+  actionButton: NativeLiquidGlassActionButton.symbol(
+    symbol: 'plus',
+    onTap: () => print('Add tapped!'),
+  ),
+  tabs: const [
+    NativeLiquidGlassNavBarItem.symbol(
+      label: 'Home',
+      symbol: 'house.fill',
+    ),
+    NativeLiquidGlassNavBarItem.symbol(
+      label: 'Search',
+      symbol: 'magnifyingglass',
+    ),
+    NativeLiquidGlassNavBarItem.symbol(
+      label: 'Saved',
+      symbol: 'heart.fill',
+    ),
+    NativeLiquidGlassNavBarItem.symbol(
+      label: 'Settings',
       symbol: 'gearshape.fill',
     ),
   ],
@@ -157,9 +244,9 @@ NativeLiquidGlassNavBar(
 
 ---
 
-### 4. Mix & Match (PNGs, SVGs, Icons, and Badges)
+### 5. 🔀 Mix & Match (PNGs, SVGs, Icons, and Badges)
 
-You can freely mix different widget types in the same navigation bar:
+You can freely mix different icon types and custom widgets across your navigation bar:
 
 ```dart
 NativeLiquidGlassNavBar(
@@ -170,28 +257,24 @@ NativeLiquidGlassNavBar(
     NativeLiquidGlassNavBarItem.widget(
       label: 'Home',
       iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24),
-      symbol: 'house.fill',
     ),
     // 2. Vector SVG
     NativeLiquidGlassNavBarItem.widget(
       label: 'Search',
       iconWidget: SvgPicture.asset('assets/icons/search.svg', width: 24, height: 24),
-      symbol: 'magnifyingglass',
     ),
-    // 3. Flutter Icon with Notification Badge
+    // 3. Custom Badge with Flutter Icon
     NativeLiquidGlassNavBarItem.widget(
       label: 'Alerts',
       iconWidget: const Badge(
-        label: Text('2'),
-        child: Icon(Icons.notifications_rounded),
+        label: Text('3'),
+        child: Icon(Icons.notifications_rounded, size: 24),
       ),
-      symbol: 'bell.fill',
     ),
     // 4. Flutter IconData
     const NativeLiquidGlassNavBarItem.icon(
       label: 'Settings',
       icon: Icons.settings_rounded,
-      symbol: 'gearshape.fill',
     ),
   ],
 )
@@ -199,18 +282,19 @@ NativeLiquidGlassNavBar(
 
 ---
 
-## 🎨 Active & Inactive Widget States
+## 🎨 Dynamic Theming & Appearance
 
-Provide `selectedIconWidget` to display a distinct widget (such as a filled icon or highlighted image) when active:
+You can customize the active tint color, unselected color, icon size, label font size, and light/dark appearance:
 
 ```dart
-NativeLiquidGlassNavBarItem(
-  label: 'Saved',
-  // Inactive state (e.g. outline icon or dimmed PNG)
-  iconWidget: Image.asset('assets/icons/heart_outline.png', width: 24, height: 24),
-  // Active state (e.g. filled icon or colored PNG)
-  selectedIconWidget: Image.asset('assets/icons/heart_filled.png', width: 24, height: 24),
-  symbol: 'heart.fill',
+NativeLiquidGlassNavBar(
+  currentIndex: _currentIndex,
+  onTap: (index) => setState(() => _currentIndex = index),
+  tintColor: const Color(0xFF0A84FF),      // Active tab color (Apple Blue)
+  unselectedColor: const Color(0xFF8E8E93),// Inactive tab color
+  iconSize: 26.0,                          // Custom icon dimension
+  fontSize: 11.0,                          // Custom label font size
+  tabs: _myTabs,
 )
 ```
 
@@ -218,19 +302,19 @@ NativeLiquidGlassNavBarItem(
 
 ## 🌐 Cross-Platform Fallback
 
-When running on Android, Web, or Desktop, `native_liquid_glass_navbar` automatically renders a floating frosted-glass navbar with:
+When running on **Android, Web, macOS, Linux, or Windows** (or unsupported devices), `native_liquid_glass_navbar` automatically renders a high-end floating frosted-glass navigation bar featuring:
 - **`ImageFilter.blur` (sigma 25)** backdrop glassmorphic blur.
 - **Animated sliding indicator pill** tracking active tab transitions.
-- Automatic light & dark mode borders and drop shadows.
+- Light and dark mode support with automatic border gradients and drop shadows.
 
-You can also pass your own custom fallback widget via `fallback:`:
+You can also provide a custom fallback widget via `fallback:`:
 
 ```dart
 NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
   tabs: _tabs,
-  // Custom fallback widget for Android / Web:
+  // Custom fallback widget for non-iOS platforms:
   fallback: NavigationBar(
     selectedIndex: _currentIndex,
     onDestinationSelected: (index) => setState(() => _currentIndex = index),
@@ -254,20 +338,20 @@ NativeLiquidGlassNavBar(
 | :--- | :--- | :--- |
 | `tabs` | `List<NativeLiquidGlassNavBarItem>` | List of tabs (up to 5 tabs, or 4 when `actionButton` is provided). |
 | `currentIndex` | `int` | The index of the currently active tab. |
-| `onTap` | `ValueChanged<int>` | Callback triggered when a tab is selected. |
+| `onTap` | `ValueChanged<int>` | Callback triggered when a tab is tapped. |
 | `actionButton` | `NativeLiquidGlassActionButton?` | Optional circular action button floating to the right of the tabs. |
-| `tintColor` | `Color?` | Custom tint color for the active tab and indicator. |
+| `tintColor` | `Color?` | Custom tint color for active tab and indicator. |
 | `unselectedColor` | `Color?` | Custom color for unselected tabs. |
 | `iconSize` | `double?` | Custom icon dimension (default: `26.0`). |
 | `fontSize` | `double?` | Custom label font size (default: `10.0`). |
-| `fallback` | `Widget?` | Optional custom widget for non-iOS platforms. |
+| `fallback` | `Widget?` | Optional custom fallback widget for non-iOS platforms. |
 
 ---
 
 ### `NativeLiquidGlassNavBarItem`
 
 **Named Constructors:**
-- `NativeLiquidGlassNavBarItem.widget({required String label, required Widget iconWidget, Widget? selectedIconWidget, String? symbol, double? iconSize})`
+- `NativeLiquidGlassNavBarItem.widget({required String label, required Widget iconWidget, Widget? selectedIconWidget, Uint8List? imageBytes, String? symbol, double? iconSize})`
 - `NativeLiquidGlassNavBarItem.icon({required String label, required IconData icon, String? symbol, double? iconSize})`
 - `NativeLiquidGlassNavBarItem.symbol({required String label, required String symbol, double? iconSize})`
 
@@ -276,7 +360,8 @@ NativeLiquidGlassNavBar(
 | `label` | `String` | Text label displayed under the tab icon. |
 | `iconWidget` | `Widget?` | Any Flutter widget (`Image.asset`, `SvgPicture.asset`, `Icon`, `Badge`, etc.). |
 | `selectedIconWidget` | `Widget?` | Optional custom Flutter widget to render when active/selected. |
-| `icon` | `IconData?` | Flutter `IconData` (`Icons.home`, `CupertinoIcons.house`). |
+| `imageBytes` | `Uint8List?` | Raw bitmap/PNG image bytes for direct high-res native iOS rendering. |
+| `icon` | `IconData?` | Flutter `IconData` (`Icons.home_rounded`, `CupertinoIcons.house`). |
 | `symbol` | `String?` | Apple SF Symbol name (`house.fill`, `gearshape.fill`). |
 | `iconSize` | `double?` | Individual tab icon size override. |
 
@@ -285,7 +370,7 @@ NativeLiquidGlassNavBar(
 ### `NativeLiquidGlassActionButton`
 
 **Named Constructors:**
-- `NativeLiquidGlassActionButton.widget({required Widget iconWidget, required VoidCallback onTap, String? symbol, double? iconSize})`
+- `NativeLiquidGlassActionButton.widget({required Widget iconWidget, required VoidCallback onTap, Uint8List? imageBytes, String? symbol, double? iconSize})`
 - `NativeLiquidGlassActionButton.icon({required IconData icon, required VoidCallback onTap, String? symbol, double? iconSize})`
 - `NativeLiquidGlassActionButton.symbol({required String symbol, required VoidCallback onTap, double? iconSize})`
 
@@ -293,6 +378,7 @@ NativeLiquidGlassNavBar(
 | :--- | :--- | :--- |
 | `onTap` | `VoidCallback` | Callback triggered when the action button is tapped. |
 | `iconWidget` | `Widget?` | Any Flutter widget (`Image.asset`, `SvgPicture.asset`, `Icon`). |
+| `imageBytes` | `Uint8List?` | Raw bitmap/PNG image bytes for direct high-res native iOS rendering. |
 | `icon` | `IconData?` | Flutter `IconData` for the action button. |
 | `symbol` | `String?` | Apple SF Symbol name (`plus`). |
 | `iconSize` | `double?` | Action button icon size override. |

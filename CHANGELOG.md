@@ -1,3 +1,9 @@
+## 1.1.2
+
+- **Retina-Scale Vector SVG Rasterization**: Fixed SVG vector scaling in the example rasterizer to ensure SVG icons fill the full tab item dimensions with crisp retina resolution on iOS and Android.
+- **Enhanced `.widget()` Constructor**: Added `imageBytes` parameter to `NativeLiquidGlassNavBarItem.widget()` and `NativeLiquidGlassActionButton.widget()` so custom widgets (such as SVGs and PNGs) can supply high-resolution bitmap data directly for native iOS `UITabBar` rendering.
+- **Direct Asset Image Support**: Improved direct PNG and SVG asset handling across platforms.
+
 ## 1.1.1
 
 - **Simplified Pure Widget API**: Direct, clean `iconWidget` support for any custom Flutter widget (`SvgPicture.asset`, `Image.asset`, custom badges, etc.).

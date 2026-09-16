@@ -19,17 +19,34 @@ This package renders the native iOS `UITabBar` on iOS devices for authentic Appl
 
 ---
 
-## 🌟 Supported Icon & Image Formats
+## 💡 How Icon Resolution Works (iOS Native vs. Cross-Platform)
 
-You can pass any icon or image format using dedicated parameters or custom widgets:
+> [!IMPORTANT]
+> **Understanding Icon Rendering Across Platforms:**
+> - **On iOS**: The navbar renders Apple's native **UIKit `UITabBar`** for authentic Liquid Glass blur. Native UIKit requires an Apple SF Symbol / Asset name (`symbol: 'house.fill'`), raw bitmap bytes (`imageBytes: bytes`), or `IconData` (`icon: Icons.home`).
+> - **On Android, Web, & Desktop**: The navbar renders your custom Flutter widgets (`iconWidget: SvgPicture.asset(...)` or `Image.asset(...)`).
+>
+> **Best Practice for Custom Widgets & SVGs:**
+> When using `NativeLiquidGlassNavBarItem.widget()`, always provide a native `symbol:` (or `imageBytes:`) so iOS displays the native symbol/asset image rather than falling back to a `?` (question mark):
+> ```dart
+> NativeLiquidGlassNavBarItem.widget(
+>   label: 'Home',
+>   symbol: 'house.fill', // Rendered on iOS native UITabBar
+>   iconWidget: SvgPicture.asset('assets/svgs/home.svg', width: 24, height: 24), // Rendered on Android / Web
+> )
+> ```
+
+---
+
+## 🌟 Supported Icon & Image Formats
 
 | Format / Source | How to Use | Code Snippet |
 | :--- | :--- | :--- |
-| 🖼️ **PNG / JPG Images** | Use `iconWidget: Image.asset(...)` or `imageBytes` | `NativeLiquidGlassNavBarItem.widget(label: 'Home', iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24))` |
-| 🎨 **Vector SVGs** | Use `iconWidget: SvgPicture.asset(...)` | `NativeLiquidGlassNavBarItem.widget(label: 'Search', iconWidget: SvgPicture.asset('assets/icons/search.svg', width: 24, height: 24))` |
-| 🔣 **Flutter Icons** | Use `icon: Icons.home_rounded` | `NativeLiquidGlassNavBarItem.icon(label: 'Home', icon: Icons.home_rounded)` |
-| 🍏 **Apple SF Symbols** | Use `symbol: 'house.fill'` | `NativeLiquidGlassNavBarItem.symbol(label: 'Home', symbol: 'house.fill')` |
-| 🏷️ **Badges & Custom UI** | Use `iconWidget: Badge(...)` | `NativeLiquidGlassNavBarItem.widget(label: 'Alerts', iconWidget: Badge(label: Text('3'), child: Icon(Icons.notifications)))` |
+| 🖼️ **PNG / JPG Images** | Use `iconWidget: Image.asset(...)` + `symbol:` or `imageBytes:` | `NativeLiquidGlassNavBarItem.widget(label: 'Home', symbol: 'house.fill', iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24))` |
+| 🎨 **Vector SVGs** | Use `iconWidget: SvgPicture.asset(...)` + `symbol:` | `NativeLiquidGlassNavBarItem.widget(label: 'Search', symbol: 'magnifyingglass', iconWidget: SvgPicture.asset('assets/icons/search.svg', width: 24, height: 24))` |
+| 🔣 **Flutter Icons** | Use `icon: Icons.home_rounded` (Auto-rasterized for iOS) | `NativeLiquidGlassNavBarItem.icon(label: 'Home', icon: Icons.home_rounded)` |
+| 🍏 **Apple SF Symbols** | Use `symbol: 'house.fill'` (Auto-mapped on Android/Web) | `NativeLiquidGlassNavBarItem.symbol(label: 'Home', symbol: 'house.fill')` |
+| 🏷️ **Badges & Custom UI** | Use `iconWidget: Badge(...)` + `symbol:` | `NativeLiquidGlassNavBarItem.widget(label: 'Alerts', symbol: 'bell.fill', iconWidget: Badge(label: Text('3'), child: Icon(Icons.notifications)))` |
 
 ---
 
@@ -49,7 +66,7 @@ flutter pub get
 
 ---
 
-## 💡 How to Use
+## 💡 Usage Examples
 
 ### 1. 🖼️ Using PNG Images (`Image.asset`)
 
@@ -60,27 +77,32 @@ NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
   actionButton: NativeLiquidGlassActionButton.widget(
-    iconWidget: Image.asset('assets/icons/plus.png', width: 20, height: 20, color: Colors.white),
+    symbol: 'plus', // Rendered on iOS
+    iconWidget: Image.asset('assets/icons/plus.png', width: 20, height: 20, color: Colors.white), // Android/Web
     onTap: () => print('Add tapped!'),
   ),
   tabs: [
     NativeLiquidGlassNavBarItem.widget(
       label: 'Home',
+      symbol: 'house.fill',
       iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24),
       selectedIconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24, color: Colors.blue),
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Search',
+      symbol: 'magnifyingglass',
       iconWidget: Image.asset('assets/icons/search.png', width: 24, height: 24),
       selectedIconWidget: Image.asset('assets/icons/search.png', width: 24, height: 24, color: Colors.blue),
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Saved',
+      symbol: 'heart.fill',
       iconWidget: Image.asset('assets/icons/heart.png', width: 24, height: 24),
       selectedIconWidget: Image.asset('assets/icons/heart.png', width: 24, height: 24, color: Colors.blue),
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Settings',
+      symbol: 'gearshape.fill',
       iconWidget: Image.asset('assets/icons/settings.png', width: 24, height: 24),
       selectedIconWidget: Image.asset('assets/icons/settings.png', width: 24, height: 24, color: Colors.blue),
     ),
@@ -99,7 +121,8 @@ NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
   actionButton: NativeLiquidGlassActionButton.widget(
-    iconWidget: SvgPicture.asset(
+    symbol: 'plus', // Rendered on iOS
+    iconWidget: SvgPicture.asset( // Rendered on Android / Web
       'assets/icons/plus.svg',
       width: 20,
       height: 20,
@@ -110,6 +133,7 @@ NativeLiquidGlassNavBar(
   tabs: [
     NativeLiquidGlassNavBarItem.widget(
       label: 'Home',
+      symbol: 'house.fill',
       iconWidget: SvgPicture.asset(
         'assets/icons/home.svg',
         width: 24,
@@ -125,6 +149,7 @@ NativeLiquidGlassNavBar(
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Search',
+      symbol: 'magnifyingglass',
       iconWidget: SvgPicture.asset(
         'assets/icons/search.svg',
         width: 24,
@@ -140,6 +165,7 @@ NativeLiquidGlassNavBar(
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Saved',
+      symbol: 'heart.fill',
       iconWidget: SvgPicture.asset(
         'assets/icons/heart.svg',
         width: 24,
@@ -155,6 +181,7 @@ NativeLiquidGlassNavBar(
     ),
     NativeLiquidGlassNavBarItem.widget(
       label: 'Settings',
+      symbol: 'gearshape.fill',
       iconWidget: SvgPicture.asset(
         'assets/icons/settings.svg',
         width: 24,
@@ -176,7 +203,7 @@ NativeLiquidGlassNavBar(
 
 ### 3. 🔣 Using Flutter Icons (`IconData`)
 
-Pass standard Flutter `IconData` (Material or Cupertino icons) directly using `NativeLiquidGlassNavBarItem.icon()`:
+Pass standard Flutter `IconData` (Material or Cupertino icons) directly using `NativeLiquidGlassNavBarItem.icon()`. The package automatically converts them to high-resolution native image bytes for iOS without requiring manual configuration:
 
 ```dart
 NativeLiquidGlassNavBar(
@@ -256,16 +283,19 @@ NativeLiquidGlassNavBar(
     // 1. PNG Image
     NativeLiquidGlassNavBarItem.widget(
       label: 'Home',
+      symbol: 'house.fill',
       iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24),
     ),
     // 2. Vector SVG
     NativeLiquidGlassNavBarItem.widget(
       label: 'Search',
+      symbol: 'magnifyingglass',
       iconWidget: SvgPicture.asset('assets/icons/search.svg', width: 24, height: 24),
     ),
     // 3. Custom Badge with Flutter Icon
     NativeLiquidGlassNavBarItem.widget(
       label: 'Alerts',
+      symbol: 'bell.fill',
       iconWidget: const Badge(
         label: Text('3'),
         child: Icon(Icons.notifications_rounded, size: 24),
@@ -358,11 +388,11 @@ NativeLiquidGlassNavBar(
 | Property | Type | Description |
 | :--- | :--- | :--- |
 | `label` | `String` | Text label displayed under the tab icon. |
-| `iconWidget` | `Widget?` | Any Flutter widget (`Image.asset`, `SvgPicture.asset`, `Icon`, `Badge`, etc.). |
+| `iconWidget` | `Widget?` | Any Flutter widget (`Image.asset`, `SvgPicture.asset`, `Icon`, `Badge`, etc.) rendered on Android/Web fallback. |
 | `selectedIconWidget` | `Widget?` | Optional custom Flutter widget to render when active/selected. |
 | `imageBytes` | `Uint8List?` | Raw bitmap/PNG image bytes for direct high-res native iOS rendering. |
-| `icon` | `IconData?` | Flutter `IconData` (`Icons.home_rounded`, `CupertinoIcons.house`). |
-| `symbol` | `String?` | Apple SF Symbol name (`house.fill`, `gearshape.fill`). |
+| `icon` | `IconData?` | Flutter `IconData` (`Icons.home_rounded`, `CupertinoIcons.house`). Auto-rasterized for iOS. |
+| `symbol` | `String?` | Apple SF Symbol name (`house.fill`, `gearshape.fill`) or iOS Asset Catalog image name. |
 | `iconSize` | `double?` | Individual tab icon size override. |
 
 ---

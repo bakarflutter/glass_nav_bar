@@ -1,3 +1,11 @@
+## 1.1.0
+
+- **Direct Flutter Widget Support (`iconWidget` & `selectedIconWidget`)**: Allow passing any Flutter `Widget` directly (such as `Image.asset`, `SvgPicture.asset`, custom badges, Lottie, etc.) for tab items and action buttons.
+- **Zero External Dependencies**: Removed the external `flutter_svg` dependency from the package core to eliminate package version locks and dependency conflicts. Developers can now bring their own icon widgets (including `flutter_svg` from their application if desired) without constraint.
+- **Convenient Named Constructors**: Added `.widget()`, `.icon()`, `.asset()`, and `.symbol()` named constructors to `NativeLiquidGlassNavBarItem` and `NativeLiquidGlassActionButton`.
+- **Pure Rasterizer**: Streamlined built-in `IconData` and raster asset loading to use pure Flutter `dart:ui` and `Canvas` with high-performance in-memory caching.
+- **Updated Example App**: Demonstrated custom SVG widget integration using `flutter_svg` inside the example application with seamless cross-platform fallback.
+
 ## 1.0.5
 
 - **Direct GitHub CDN Asset Links**: Updated showcase image links in documentation to point to direct raw GitHub URLs for reliable rendering on pub.dev and online package catalogs.

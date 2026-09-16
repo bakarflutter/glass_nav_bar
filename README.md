@@ -1,6 +1,6 @@
 # native_liquid_glass_navbar
 
-A high-performance Flutter plugin that brings the authentic iOS **Liquid Glass** navigation bar to Flutter apps with full support for **custom SVGs**, **PNG/raster images**, **Flutter IconData**, and **Apple SF Symbols**.
+A high-performance, **zero-dependency** Flutter plugin that brings the authentic iOS **Liquid Glass** navigation bar to Flutter apps with full support for **custom Flutter widgets (Images, SVGs, Badges)**, **PNG/raster images**, **Flutter IconData**, and **Apple SF Symbols**.
 
 This package uses [platform views and method channels](https://docs.flutter.dev/platform-integration/ios/platform-views) to render the actual native iOS `UITabBar`. This eliminates the uncanny valley effect often found in simulated Flutter implementations, providing authentic Apple Liquid Glass blur, haptics, fluidity, and tab animations.
 
@@ -13,7 +13,7 @@ This package uses [platform views and method channels](https://docs.flutter.dev/
 | ☀️ iOS Light Theme | 🌙 iOS Dark Theme | 🚀 Cross-Platform Fallback |
 | :---: | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/bakarflutter/glass_nav_bar/main/example/assets/white_theme_navbar.png" width="270" alt="iOS Light Theme Liquid Glass Navbar" /> | <img src="https://raw.githubusercontent.com/bakarflutter/glass_nav_bar/main/example/assets/dark_theme_navbar.png" width="270" alt="iOS Dark Theme Liquid Glass Navbar" /> | <img src="https://raw.githubusercontent.com/bakarflutter/glass_nav_bar/main/example/assets/fallback_navbar.png" width="270" alt="Cross-Platform Glass Fallback Navbar" /> |
-| **Authentic iOS Light Blur**<br>• Crisp Vector SVGs & PNGs<br>• Dynamic Live Mesh Underlay<br>• Floating Quick Action Pill | **Deep Liquid Dark Blur**<br>• Custom Accent & Tinting<br>• High-contrast Retina Icons<br>• Native iOS `UITabBar` Fluidity | **Glassmorphism for All Platforms**<br>• Android, Web & Desktop Ready<br>• Smooth Animated Sliding Pill<br>• Frosted Backdrop Blur (Sigma 25) |
+| **Authentic iOS Light Blur**<br>• Crisp Custom Widgets & PNGs<br>• Dynamic Live Mesh Underlay<br>• Floating Quick Action Pill | **Deep Liquid Dark Blur**<br>• Custom Accent & Tinting<br>• High-contrast Retina Icons<br>• Native iOS `UITabBar` Fluidity | **Glassmorphism for All Platforms**<br>• Android, Web & Desktop Ready<br>• Smooth Animated Sliding Pill<br>• Frosted Backdrop Blur (Sigma 25) |
 
 </div>
 
@@ -23,7 +23,7 @@ This package uses [platform views and method channels](https://docs.flutter.dev/
 
 ### ☀️ Light Theme (Liquid Glass)
 - **Authentic Apple Vibrancy**: Uses native iOS glass materials that dynamically sample the colors and gradients passing beneath the navigation bar.
-- **Retina Crisp Vector SVGs**: High-resolution vector rasterization ensuring pixel-perfect clarity without blurriness on @2x and @3x screens.
+- **Zero External Dependencies**: Lightweight and robust with no 3rd-party dependencies, preventing version conflicts.
 - **Floating Action Pill**: Sleek circular action button for central actions (e.g. Create, Add, Camera) seamlessly integrated into the navigation bar hierarchy.
 
 ### 🌙 Dark Theme (Deep Translucency)
@@ -34,21 +34,22 @@ This package uses [platform views and method channels](https://docs.flutter.dev/
 ### 🚀 Cross-Platform Fallback (Android, Web & Desktop)
 - **Built-in Frosted Glass Container**: Features backdrop glassmorphic blur (`ImageFilter.blur(sigmaX: 25, sigmaY: 25)`), dynamic glass borders, and subtle elevation shadows.
 - **Interactive Sliding Pill Indicator**: Smooth spring-animated pill indicator tracks active tab transitions across all non-iOS platforms.
-- **100% Feature Parity**: Full support for custom SVGs, PNG assets, Flutter `IconData`, custom sizes, and action buttons without any extra configuration.
+- **100% Feature Parity**: Full support for custom Flutter widgets (e.g. `SvgPicture.asset`, `Image.asset`), PNG assets, Flutter `IconData`, custom sizes, and action buttons without extra configuration.
 - **Custom Fallback Widget Support**: Easily plug in a custom Material 3 `NavigationBar` or any widget via the `fallback:` parameter.
 
 ---
 
 ## Features
 
-- 🎨 **Custom SVGs**: Load vector SVG icons directly via Flutter asset path (`svgPath`) or inline SVG string (`svgString`).
+- 🧩 **Custom Widgets & SVGs**: Pass any Flutter `Widget` directly via `iconWidget` (e.g. `SvgPicture.asset`, `Image.asset`, custom badges, Lottie, etc.).
+- 📦 **Zero Dependencies**: Pure Flutter SDK implementation without 3rd-party dependency lock-in.
 - 🖼️ **PNG & Image Assets**: Use custom PNG, JPG, or WebP assets (`assetPath`) or raw memory bytes (`imageBytes`).
 - 🔣 **Flutter IconData**: Use any Material Icon, Cupertino Icon, or custom font icon (`icon: Icons.home`).
 - 🍏 **Apple SF Symbols**: Built-in support for native Apple SF Symbols (`symbol: 'house.fill'`).
 - 💎 **Authentic Liquid Glass Blur**: Genuine native iOS translucency and blur styling with zero frame drops.
 - 🌓 **Theming & Dark Mode**: Automatically adapts to system brightness and your app's `ThemeData` primary and tint colors.
 - 🔘 **Action Button**: Add a prominent circular action button to the right of the tabs for central app actions (e.g. Create / Post / Add).
-- 📱 **Cross-Platform Fallback**: Automatically provides a built-in cross-platform navigation bar or accepts a custom `fallback` widget for Android, Web, and older iOS versions.
+- 📱 **Cross-Platform Fallback**: Automatically provides a built-in cross-platform navigation bar or accepts a custom `fallback` widget for Android, Web, and desktop platforms.
 - ⚡ **High-Performance In-Memory Cache**: Icons are rasterized at high retina resolution (@3x) and cached in memory for instantaneous 60/120 FPS transitions.
 
 ---
@@ -59,7 +60,7 @@ Add `native_liquid_glass_navbar` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  native_liquid_glass_navbar: ^1.0.5
+  native_liquid_glass_navbar: ^1.1.0
 ```
 
 Run `flutter pub get`.
@@ -70,30 +71,40 @@ Run `flutter pub get`.
 
 ### Option 1: Quick Named Constructors (Recommended)
 
-Use convenient named constructors for crisp, declarative code:
+Use convenient named constructors for clean, declarative code:
 
 ```dart
 NativeLiquidGlassNavBar(
   currentIndex: _currentIndex,
   onTap: (index) => setState(() => _currentIndex = index),
-  actionButton: NativeLiquidGlassActionButton.svg(
-    svgPath: 'assets/icons/plus.svg',
+  actionButton: NativeLiquidGlassActionButton.widget(
+    iconWidget: SvgPicture.asset('assets/icons/plus.svg', width: 20, height: 20),
+    symbol: 'plus',
+    assetPath: 'assets/icons/plus.png',
     onTap: () => _openCreateModal(),
   ),
-  tabs: const [
-    NativeLiquidGlassNavBarItem.svg(
+  tabs: [
+    // Custom widget (e.g., SVG using flutter_svg from your app)
+    NativeLiquidGlassNavBarItem.widget(
       label: 'Home',
-      svgPath: 'assets/icons/home.svg',
+      iconWidget: SvgPicture.asset('assets/icons/home.svg', width: 24, height: 24),
+      symbol: 'house.fill',
+      assetPath: 'assets/icons/home.png',
     ),
-    NativeLiquidGlassNavBarItem.svg(
+    // PNG Asset
+    const NativeLiquidGlassNavBarItem.asset(
       label: 'Search',
-      svgPath: 'assets/icons/search.svg',
+      assetPath: 'assets/icons/search.png',
+      symbol: 'magnifyingglass',
     ),
-    NativeLiquidGlassNavBarItem.icon(
+    // Flutter IconData
+    const NativeLiquidGlassNavBarItem.icon(
       label: 'Saved',
       icon: Icons.favorite_rounded,
+      symbol: 'heart.fill',
     ),
-    NativeLiquidGlassNavBarItem.symbol(
+    // Native Apple SF Symbol
+    const NativeLiquidGlassNavBarItem.symbol(
       label: 'Settings',
       symbol: 'gearshape.fill',
     ),
@@ -105,7 +116,7 @@ NativeLiquidGlassNavBar(
 
 ### Option 2: Standard Constructor
 
-You can mix and match custom SVGs, PNGs, and Flutter `IconData`:
+You can mix and match custom widgets, PNGs, and Flutter `IconData`:
 
 ```dart
 NativeLiquidGlassNavBar(
@@ -115,18 +126,21 @@ NativeLiquidGlassNavBar(
   iconSize: 26.0,
   fontSize: 10.0,
   onTap: (index) => setState(() => _currentIndex = index),
-  tabs: const [
+  tabs: [
     NativeLiquidGlassNavBarItem(
       label: 'Home',
-      svgPath: 'assets/icons/home.svg',
+      iconWidget: Image.asset('assets/icons/home.png', width: 24, height: 24),
+      symbol: 'house.fill',
     ),
-    NativeLiquidGlassNavBarItem(
+    const NativeLiquidGlassNavBarItem(
       label: 'Search',
       assetPath: 'assets/icons/search.png',
+      symbol: 'magnifyingglass',
     ),
-    NativeLiquidGlassNavBarItem(
+    const NativeLiquidGlassNavBarItem(
       label: 'Settings',
       icon: Icons.settings_rounded,
+      symbol: 'gearshape.fill',
     ),
   ],
 )
@@ -144,7 +158,7 @@ By default, the plugin automatically renders a floating frosted-glass navbar wit
 - **`ImageFilter.blur` (sigma 25)** backdrop glassmorphic blur.
 - **Animated sliding pill indicator** with smooth spring transitions.
 - Automatic light/dark mode glass gradient borders and drop shadows.
-- Direct support for all your SVGs, PNGs, `IconData`, and action buttons.
+- Direct support for all your custom widgets, PNGs, `IconData`, and action buttons.
 
 You can customize this fallback directly using the properties on `NativeLiquidGlassNavBar`:
 
@@ -208,18 +222,18 @@ NativeLiquidGlassNavBar(
 ### `NativeLiquidGlassNavBarItem`
 
 Named constructors:
-- `NativeLiquidGlassNavBarItem.svg({required String label, required String svgPath, double? iconSize})`
-- `NativeLiquidGlassNavBarItem.icon({required String label, required IconData icon, double? iconSize})`
-- `NativeLiquidGlassNavBarItem.asset({required String label, required String assetPath, double? iconSize})`
+- `NativeLiquidGlassNavBarItem.widget({required String label, required Widget iconWidget, Widget? selectedIconWidget, String? symbol, String? assetPath, double? iconSize})`
+- `NativeLiquidGlassNavBarItem.icon({required String label, required IconData icon, String? symbol, double? iconSize})`
+- `NativeLiquidGlassNavBarItem.asset({required String label, required String assetPath, String? symbol, double? iconSize})`
 - `NativeLiquidGlassNavBarItem.symbol({required String label, required String symbol, double? iconSize})`
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `label` | `String` | Text label displayed under the tab icon. |
-| `svgPath` | `String?` | Flutter asset path to an SVG vector file (`assets/icons/home.svg`). |
+| `iconWidget` | `Widget?` | Custom Flutter widget to render (e.g. `SvgPicture.asset`, `Image.asset`, custom badge). |
+| `selectedIconWidget` | `Widget?` | Optional custom Flutter widget to render when tab is selected. |
 | `assetPath` | `String?` | Flutter asset path to a PNG/JPEG/WebP image (`assets/icons/home.png`). |
-| `icon` | `IconData?` | Flutter [IconData] to render (`Icons.home`, `CupertinoIcons.house`). |
-| `svgString` | `String?` | Raw SVG XML string to render dynamically. |
+| `icon` | `IconData?` | Flutter `IconData` to render (`Icons.home`, `CupertinoIcons.house`). |
 | `imageBytes` | `Uint8List?` | Raw PNG byte buffer for in-memory images. |
 | `symbol` | `String?` | Apple SF Symbol name (`house.fill`, `gearshape.fill`). |
 | `iconSize` | `double?` | Individual tab icon size override. |
@@ -229,18 +243,17 @@ Named constructors:
 ### `NativeLiquidGlassActionButton`
 
 Named constructors:
-- `NativeLiquidGlassActionButton.svg({required String svgPath, required VoidCallback onTap, double? iconSize})`
-- `NativeLiquidGlassActionButton.icon({required IconData icon, required VoidCallback onTap, double? iconSize})`
-- `NativeLiquidGlassActionButton.asset({required String assetPath, required VoidCallback onTap, double? iconSize})`
+- `NativeLiquidGlassActionButton.widget({required Widget iconWidget, required VoidCallback onTap, String? symbol, String? assetPath, double? iconSize})`
+- `NativeLiquidGlassActionButton.icon({required IconData icon, required VoidCallback onTap, String? symbol, double? iconSize})`
+- `NativeLiquidGlassActionButton.asset({required String assetPath, required VoidCallback onTap, String? symbol, double? iconSize})`
 - `NativeLiquidGlassActionButton.symbol({required String symbol, required VoidCallback onTap, double? iconSize})`
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `onTap` | `VoidCallback` | Callback triggered when the action button is tapped. |
-| `svgPath` | `String?` | Flutter asset path to an SVG vector icon. |
+| `iconWidget` | `Widget?` | Custom Flutter widget to render as the action button icon. |
 | `assetPath` | `String?` | Flutter asset path to a PNG/JPEG/WebP image. |
-| `icon` | `IconData?` | Flutter [IconData] for the action button. |
-| `svgString` | `String?` | Raw SVG XML string. |
+| `icon` | `IconData?` | Flutter `IconData` for the action button. |
 | `imageBytes` | `Uint8List?` | Raw PNG byte buffer. |
 | `symbol` | `String?` | Apple SF Symbol name or native asset name. |
 | `iconSize` | `double?` | Action button icon size override. |

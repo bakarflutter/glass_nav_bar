@@ -8,7 +8,7 @@ void main() {
     await tester.pumpWidget(const LiquidGlassApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('Explore Feed'), findsWidgets);
-    expect(find.text('Authentic Liquid Glass'), findsOneWidget);
+    expect(find.byType(LiquidGlassApp), findsOneWidget);
+    expect(find.text('Glass Explorer'), findsWidgets);
   });
 }

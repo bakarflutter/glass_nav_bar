@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,25 +22,6 @@ void main() {
       expect(bytes[3], 0x47);
     });
 
-    test('Rasterizes raw SVG string to PNG bytes successfully', () async {
-      const String svgStr = '''
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-</svg>
-''';
-
-      final Uint8List? bytes = await GlassIconLoader.rasterizeSvg(
-        svgString: svgStr,
-        targetWidth: 24.0,
-        targetHeight: 24.0,
-      );
-
-      expect(bytes, isNotNull);
-      expect(bytes!.isNotEmpty, isTrue);
-      expect(bytes[0], 0x89);
-      expect(bytes[1], 0x50);
-    });
-
     test(
       'resolveImageBytes prioritizes raw imageBytes when provided',
       () async {
@@ -64,41 +44,29 @@ void main() {
       expect(result![0], 0x89);
     });
 
-    test('Generates PNG icon assets for example app', () async {
-      final Map<String, IconData> icons = {
-        'home.png': Icons.home_rounded,
-        'search.png': Icons.search_rounded,
-        'heart.png': Icons.favorite_rounded,
-        'settings.png': Icons.settings_rounded,
-        'plus.png': Icons.add_rounded,
-      };
-
-      for (final entry in icons.entries) {
-        final bytes = await GlassIconLoader.rasterizeIconData(
-          entry.value,
-          targetSize: 28.0,
-          pixelRatio: 3.0,
-        );
-        expect(bytes, isNotNull);
-        final file = File(
-          '/Users/wajid/Desktop/native_glass_navbar-main/example/assets/icons/${entry.key}',
-        );
-        await file.writeAsBytes(bytes!);
-        expect(await file.exists(), isTrue);
-      }
+    test('Rasterizes IconData to valid PNG bytes', () async {
+      final bytes = await GlassIconLoader.rasterizeIconData(
+        Icons.home,
+        targetSize: 28.0,
+        pixelRatio: 3.0,
+      );
+      expect(bytes, isNotNull);
+      expect(bytes!.isNotEmpty, isTrue);
     });
   });
 
   group(
     'NativeLiquidGlassNavBarItem and NativeLiquidGlassActionButton models',
     () {
-      test('Constructs NativeLiquidGlassNavBarItem with svgPath', () {
+      test('Constructs NativeLiquidGlassNavBarItem with custom iconWidget', () {
         const item = NativeLiquidGlassNavBarItem(
-          label: 'Home',
-          svgPath: 'assets/icons/home.svg',
+          label: 'Custom',
+          iconWidget: FlutterLogo(),
+          selectedIconWidget: FlutterLogo(textColor: Colors.blue),
         );
-        expect(item.label, 'Home');
-        expect(item.svgPath, 'assets/icons/home.svg');
+        expect(item.label, 'Custom');
+        expect(item.iconWidget, isA<FlutterLogo>());
+        expect(item.selectedIconWidget, isA<FlutterLogo>());
       });
 
       test('Constructs NativeLiquidGlassNavBarItem with assetPath', () {
@@ -119,13 +87,25 @@ void main() {
         expect(item.icon, Icons.settings);
       });
 
-      test('Constructs NativeLiquidGlassActionButton with svgPath', () {
-        final button = NativeLiquidGlassActionButton(
-          svgPath: 'assets/icons/plus.svg',
-          onTap: () {},
+      test('Constructs NativeLiquidGlassNavBarItem with SF symbol', () {
+        const item = NativeLiquidGlassNavBarItem(
+          label: 'Home',
+          symbol: 'house.fill',
         );
-        expect(button.svgPath, 'assets/icons/plus.svg');
+        expect(item.label, 'Home');
+        expect(item.symbol, 'house.fill');
       });
+
+      test(
+        'Constructs NativeLiquidGlassActionButton with custom iconWidget',
+        () {
+          final button = NativeLiquidGlassActionButton(
+            iconWidget: const Icon(Icons.add),
+            onTap: () {},
+          );
+          expect(button.iconWidget, isA<Icon>());
+        },
+      );
     },
   );
 }

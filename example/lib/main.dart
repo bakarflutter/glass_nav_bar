@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:native_liquid_glass_navbar/native_liquid_glass_navbar.dart';
 
 void main() {
@@ -206,23 +207,99 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
   List<NativeLiquidGlassNavBarItem> _buildTabs() {
     switch (widget.iconSourceMode) {
       case IconSourceMode.svgs:
-        // Default SVG Icons
-        return const [
+        // Demonstrates using custom SVG widgets directly via iconWidget (using flutter_svg in the app)
+        return [
           NativeLiquidGlassNavBarItem(
             label: 'Home',
-            svgPath: 'assets/icons/home.svg',
+            iconWidget: SvgPicture.asset(
+              'assets/icons/home.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                widget.unselectedColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            selectedIconWidget: SvgPicture.asset(
+              'assets/icons/home.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                widget.tintColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            symbol: 'house.fill',
+            assetPath: 'assets/icons/home.png',
           ),
           NativeLiquidGlassNavBarItem(
             label: 'Search',
-            svgPath: 'assets/icons/search.svg',
+            iconWidget: SvgPicture.asset(
+              'assets/icons/search.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                widget.unselectedColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            selectedIconWidget: SvgPicture.asset(
+              'assets/icons/search.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                widget.tintColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            symbol: 'magnifyingglass',
+            assetPath: 'assets/icons/search.png',
           ),
           NativeLiquidGlassNavBarItem(
             label: 'Saved',
-            svgPath: 'assets/icons/heart.svg',
+            iconWidget: SvgPicture.asset(
+              'assets/icons/heart.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                widget.unselectedColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            selectedIconWidget: SvgPicture.asset(
+              'assets/icons/heart.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                widget.tintColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            symbol: 'heart.fill',
+            assetPath: 'assets/icons/heart.png',
           ),
           NativeLiquidGlassNavBarItem(
             label: 'Settings',
-            svgPath: 'assets/icons/settings.svg',
+            iconWidget: SvgPicture.asset(
+              'assets/icons/settings.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                widget.unselectedColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            selectedIconWidget: SvgPicture.asset(
+              'assets/icons/settings.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                widget.tintColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            symbol: 'gearshape.fill',
+            assetPath: 'assets/icons/settings.png',
           ),
         ];
       case IconSourceMode.pngs:
@@ -281,7 +358,14 @@ class _RootNavigationScreenState extends State<RootNavigationScreen> {
     switch (widget.iconSourceMode) {
       case IconSourceMode.svgs:
         return NativeLiquidGlassActionButton(
-          svgPath: 'assets/icons/plus.svg',
+          iconWidget: SvgPicture.asset(
+            'assets/icons/plus.svg',
+            width: 20,
+            height: 20,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          ),
+          symbol: 'plus',
+          assetPath: 'assets/icons/plus.png',
           onTap: _openCreateModal,
         );
       case IconSourceMode.pngs:

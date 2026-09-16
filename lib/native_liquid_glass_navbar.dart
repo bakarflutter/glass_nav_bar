@@ -1,4 +1,4 @@
-/// A Flutter plugin that provides a native liquid glass navigation bar for iOS with custom SVG, PNG, and icon support.
+/// A Flutter plugin that provides a native liquid glass navigation bar for iOS with custom widget, PNG, and icon support.
 library;
 
 export 'liquid_glass_helper.dart';
@@ -8,7 +8,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:native_liquid_glass_navbar/liquid_glass_helper.dart';
 import 'package:native_liquid_glass_navbar/src/icon_rasterizer.dart';
 
@@ -17,17 +16,17 @@ class NativeLiquidGlassNavBarItem {
   /// The label text to display for the tab.
   final String label;
 
-  /// The Flutter asset path for a custom SVG icon (e.g., 'assets/icons/home.svg').
-  final String? svgPath;
+  /// A custom Flutter [Widget] to render as the tab icon (e.g., [Image.asset], `SvgPicture.asset`, custom badge, etc.).
+  final Widget? iconWidget;
+
+  /// An optional custom Flutter [Widget] to render when this tab is currently selected.
+  final Widget? selectedIconWidget;
 
   /// The Flutter asset path for a custom PNG/raster icon (e.g., 'assets/icons/home.png').
   final String? assetPath;
 
   /// A Flutter [IconData] to render as the tab icon (e.g., [Icons.home]).
   final IconData? icon;
-
-  /// The raw SVG XML string for the icon.
-  final String? svgString;
 
   /// Raw image byte data (PNG format).
   final Uint8List? imageBytes;
@@ -40,26 +39,69 @@ class NativeLiquidGlassNavBarItem {
 
   /// Creates a new [NativeLiquidGlassNavBarItem].
   ///
-  /// Provide at least one icon source: [svgPath], [assetPath], [icon], [svgString],
+  /// Provide at least one icon source: [iconWidget], [assetPath], [icon],
   /// [imageBytes], or [symbol].
   const NativeLiquidGlassNavBarItem({
     required this.label,
-    this.svgPath,
+    this.iconWidget,
+    this.selectedIconWidget,
     this.assetPath,
     this.icon,
-    this.svgString,
     this.imageBytes,
     this.symbol,
     this.iconSize,
   }) : assert(
-         svgPath != null ||
+         iconWidget != null ||
              assetPath != null ||
              icon != null ||
-             svgString != null ||
              imageBytes != null ||
              symbol != null,
-         'Provide at least one icon source (svgPath, assetPath, icon, svgString, imageBytes, or symbol).',
+         'Provide at least one icon source (iconWidget, assetPath, icon, imageBytes, or symbol).',
        );
+
+  /// Creates a tab item with a custom Flutter widget (e.g., [Image.asset], `SvgPicture.asset`, custom badge).
+  const NativeLiquidGlassNavBarItem.widget({
+    required this.label,
+    required Widget this.iconWidget,
+    this.selectedIconWidget,
+    this.symbol,
+    this.assetPath,
+    this.iconSize,
+  }) : icon = null,
+       imageBytes = null;
+
+  /// Creates a tab item with a Flutter [IconData].
+  const NativeLiquidGlassNavBarItem.icon({
+    required this.label,
+    required IconData this.icon,
+    this.symbol,
+    this.iconSize,
+  }) : iconWidget = null,
+       selectedIconWidget = null,
+       assetPath = null,
+       imageBytes = null;
+
+  /// Creates a tab item with a PNG / raster asset path.
+  const NativeLiquidGlassNavBarItem.asset({
+    required this.label,
+    required String this.assetPath,
+    this.symbol,
+    this.iconSize,
+  }) : iconWidget = null,
+       selectedIconWidget = null,
+       icon = null,
+       imageBytes = null;
+
+  /// Creates a tab item with an Apple SF Symbol.
+  const NativeLiquidGlassNavBarItem.symbol({
+    required this.label,
+    required String this.symbol,
+    this.iconSize,
+  }) : iconWidget = null,
+       selectedIconWidget = null,
+       assetPath = null,
+       icon = null,
+       imageBytes = null;
 }
 
 /// Backwards compatibility alias for [NativeLiquidGlassNavBarItem].
@@ -72,17 +114,14 @@ typedef NativeGlassNavBarItem = NativeLiquidGlassNavBarItem;
 ///
 /// It appears to the right of the tab as a circular floating button.
 class NativeLiquidGlassActionButton {
-  /// The Flutter asset path for a custom SVG icon (e.g., 'assets/icons/plus.svg').
-  final String? svgPath;
+  /// A custom Flutter [Widget] to render as the action button icon (e.g., [Image.asset], `SvgPicture.asset`, [Icon], etc.).
+  final Widget? iconWidget;
 
   /// The Flutter asset path for a custom PNG/raster icon (e.g., 'assets/icons/plus.png').
   final String? assetPath;
 
   /// A Flutter [IconData] to render as the action button icon (e.g., [Icons.add]).
   final IconData? icon;
-
-  /// The raw SVG XML string for the icon.
-  final String? svgString;
 
   /// Raw image byte data (PNG format).
   final Uint8List? imageBytes;
@@ -98,26 +137,64 @@ class NativeLiquidGlassActionButton {
 
   /// Creates a new [NativeLiquidGlassActionButton].
   ///
-  /// Provide at least one icon source: [svgPath], [assetPath], [icon], [svgString],
+  /// Provide at least one icon source: [iconWidget], [assetPath], [icon],
   /// [imageBytes], or [symbol].
   const NativeLiquidGlassActionButton({
-    this.svgPath,
+    this.iconWidget,
     this.assetPath,
     this.icon,
-    this.svgString,
     this.imageBytes,
     this.symbol,
     this.iconSize,
     required this.onTap,
   }) : assert(
-         svgPath != null ||
+         iconWidget != null ||
              assetPath != null ||
              icon != null ||
-             svgString != null ||
              imageBytes != null ||
              symbol != null,
-         'Provide at least one icon source (svgPath, assetPath, icon, svgString, imageBytes, or symbol).',
+         'Provide at least one icon source (iconWidget, assetPath, icon, imageBytes, or symbol).',
        );
+
+  /// Creates an action button with a custom Flutter widget.
+  const NativeLiquidGlassActionButton.widget({
+    required Widget this.iconWidget,
+    this.symbol,
+    this.assetPath,
+    this.iconSize,
+    required this.onTap,
+  }) : icon = null,
+       imageBytes = null;
+
+  /// Creates an action button with a Flutter [IconData].
+  const NativeLiquidGlassActionButton.icon({
+    required IconData this.icon,
+    this.symbol,
+    this.iconSize,
+    required this.onTap,
+  }) : iconWidget = null,
+       assetPath = null,
+       imageBytes = null;
+
+  /// Creates an action button with a PNG / raster asset path.
+  const NativeLiquidGlassActionButton.asset({
+    required String this.assetPath,
+    this.symbol,
+    this.iconSize,
+    required this.onTap,
+  }) : iconWidget = null,
+       icon = null,
+       imageBytes = null;
+
+  /// Creates an action button with an Apple SF Symbol.
+  const NativeLiquidGlassActionButton.symbol({
+    required String this.symbol,
+    this.iconSize,
+    required this.onTap,
+  }) : iconWidget = null,
+       assetPath = null,
+       icon = null,
+       imageBytes = null;
 }
 
 /// Backwards compatibility alias for [NativeLiquidGlassActionButton].
@@ -221,10 +298,8 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
     final List<Uint8List?> tabImages = await Future.wait(
       widget.tabs.map(
         (tab) => GlassIconLoader.resolveImageBytes(
-          svgPath: tab.svgPath,
           assetPath: tab.assetPath,
           icon: tab.icon,
-          svgString: tab.svgString,
           imageBytes: tab.imageBytes,
           targetWidth: tab.iconSize ?? defaultSize,
           targetHeight: tab.iconSize ?? defaultSize,
@@ -236,10 +311,8 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
     if (widget.actionButton != null) {
       final double actionSize = widget.actionButton!.iconSize ?? defaultSize;
       actionImg = await GlassIconLoader.resolveImageBytes(
-        svgPath: widget.actionButton!.svgPath,
         assetPath: widget.actionButton!.assetPath,
         icon: widget.actionButton!.icon,
-        svgString: widget.actionButton!.svgString,
         imageBytes: widget.actionButton!.imageBytes,
         targetWidth: actionSize,
         targetHeight: actionSize,
@@ -292,32 +365,36 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
 
   Widget _buildTabIconWidget({
     required NativeLiquidGlassNavBarItem tab,
+    required bool isSelected,
     required Color color,
     required double size,
   }) {
-    if (tab.icon != null) {
-      return Icon(tab.icon, size: size, color: color);
-    } else if (tab.svgPath != null) {
-      return SvgPicture.asset(
-        tab.svgPath!,
-        width: size,
-        height: size,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-      );
-    } else if (tab.svgString != null) {
-      return SvgPicture.string(
-        tab.svgString!,
-        width: size,
-        height: size,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-      );
+    final Widget content;
+    if (isSelected && tab.selectedIconWidget != null) {
+      content = tab.selectedIconWidget!;
+    } else if (tab.iconWidget != null) {
+      content = tab.iconWidget!;
+    } else if (tab.icon != null) {
+      content = Icon(tab.icon, size: size, color: color);
     } else if (tab.assetPath != null) {
-      return Image.asset(tab.assetPath!, width: size, height: size);
+      content = Image.asset(tab.assetPath!, width: size, height: size);
     } else if (tab.imageBytes != null) {
-      return Image.memory(tab.imageBytes!, width: size, height: size);
+      content = Image.memory(tab.imageBytes!, width: size, height: size);
     } else {
-      return Icon(Icons.circle, size: size * 0.7, color: color);
+      content = Icon(Icons.circle, size: size * 0.7, color: color);
     }
+
+    return IconTheme(
+      data: IconThemeData(color: color, size: size),
+      child: DefaultTextStyle(
+        style: TextStyle(color: color, fontSize: size),
+        child: SizedBox(
+          width: size,
+          height: size,
+          child: Center(child: content),
+        ),
+      ),
+    );
   }
 
   Widget _buildActionIconWidget({
@@ -325,29 +402,34 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
     required Color color,
     required double size,
   }) {
-    if (actionButton.icon != null) {
-      return Icon(actionButton.icon, size: size, color: color);
-    } else if (actionButton.svgPath != null) {
-      return SvgPicture.asset(
-        actionButton.svgPath!,
-        width: size,
-        height: size,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-      );
-    } else if (actionButton.svgString != null) {
-      return SvgPicture.string(
-        actionButton.svgString!,
-        width: size,
-        height: size,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-      );
+    final Widget content;
+    if (actionButton.iconWidget != null) {
+      content = actionButton.iconWidget!;
+    } else if (actionButton.icon != null) {
+      content = Icon(actionButton.icon, size: size, color: color);
     } else if (actionButton.assetPath != null) {
-      return Image.asset(actionButton.assetPath!, width: size, height: size);
+      content = Image.asset(actionButton.assetPath!, width: size, height: size);
     } else if (actionButton.imageBytes != null) {
-      return Image.memory(actionButton.imageBytes!, width: size, height: size);
+      content = Image.memory(
+        actionButton.imageBytes!,
+        width: size,
+        height: size,
+      );
     } else {
-      return Icon(Icons.add, size: size, color: color);
+      content = Icon(Icons.add, size: size, color: color);
     }
+
+    return IconTheme(
+      data: IconThemeData(color: color, size: size),
+      child: DefaultTextStyle(
+        style: TextStyle(color: color, fontSize: size),
+        child: SizedBox(
+          width: size,
+          height: size,
+          child: Center(child: content),
+        ),
+      ),
+    );
   }
 
   Widget _buildDefaultFallback(BuildContext context) {
@@ -480,6 +562,7 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
                                 children: [
                                   _buildTabIconWidget(
                                     tab: tab,
+                                    isSelected: isSelected,
                                     color: isSelected
                                         ? selectedColor
                                         : unselectedColor,

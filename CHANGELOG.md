@@ -1,3 +1,8 @@
+## 1.1.6
+
+- **Fixed Swift Compilation Compatibility**: Corrected iOS 18+ `UITabBarController.Sidebar` and `UILargeContentViewerItem` API usage in `NativeTabBar.swift`, ensuring 100% clean compilation on Xcode across all iOS deployment targets and device configurations.
+- **Consistent Platform Rendering**: Retained exact UI styling, pixel-perfect layout alignment, and full touch safety across iPhone, iPad, and cross-platform devices.
+
 ## 1.1.5
 
 - **Route-Aware Navigation Isolation**: Automatically hides and disables touches on the underlying native platform view when navigating to other screens (`Navigator.push`), eliminating touch bleed-through and background gesture conflicts.

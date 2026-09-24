@@ -153,7 +153,6 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		if #available(iOS 18.0, *) {
 			self.mode = .tabBar
 			self.sidebar.isHidden = true
-			self.sidebar.items = []
 		}
 
 		configureAppearance()
@@ -172,6 +171,9 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		for subview in tabBar.subviews {
 			if let control = subview as? UIControl {
 				control.clipsToBounds = true
+				if #available(iOS 13.0, *) {
+					control.showsLargeContentViewer = false
+				}
 				let buttonWidth = control.bounds.width
 				let horizontalPadding: CGFloat = 6.0
 				let maxLabelWidth = max(0, buttonWidth - (horizontalPadding * 2))
@@ -328,7 +330,6 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 			item.setTitleTextAttributes(normalAttributes, for: .normal)
 			item.setTitleTextAttributes(selectedAttributes, for: .selected)
 			if #available(iOS 13.0, *) {
-				item.showsLargeContentViewer = false
 				item.largeContentSizeImage = nil
 			}
 			dummyVC.tabBarItem = item
@@ -347,7 +348,6 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 				targetSize: actionSize
 			)
 			if #available(iOS 13.0, *) {
-				item.showsLargeContentViewer = false
 				item.largeContentSizeImage = nil
 			}
 

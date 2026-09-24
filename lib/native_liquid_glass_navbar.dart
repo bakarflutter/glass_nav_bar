@@ -700,7 +700,10 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
+    final ModalRoute<dynamic>? modalRoute = ModalRoute.of(context);
+    final Animation<double>? secondaryAnimation = modalRoute?.secondaryAnimation;
+
+    Widget content = FutureBuilder<bool>(
       future: _initFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -725,6 +728,10 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
             creationParamsCodec: const StandardMessageCodec(),
             onPlatformViewCreated: (id) {
               _channel = MethodChannel('NativeTabBar_$id');
+              final bool isCurrent = modalRoute?.isCurrent ?? true;
+              _channel!
+                  .invokeMethod('setVisibility', {'visible': isCurrent})
+                  .catchError((_) {});
               _channel!.setMethodCallHandler((call) async {
                 if (call.method == 'valueChanged') {
                   final index = call.arguments['index'] as int;
@@ -739,6 +746,43 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
           ),
         );
       },
+    );
+
+    if (secondaryAnimation != null) {
+      return AnimatedBuilder(
+        animation: secondaryAnimation,
+        builder: (context, child) {
+          final bool isCurrent = modalRoute?.isCurrent ?? true;
+          if (_channel != null) {
+            _channel!
+                .invokeMethod('setVisibility', {'visible': isCurrent})
+                .catchError((_) {});
+          }
+          return Visibility(
+            visible: isCurrent,
+            maintainState: true,
+            maintainAnimation: true,
+            maintainSize: false,
+            child: IgnorePointer(
+              ignoring: !isCurrent,
+              child: child,
+            ),
+          );
+        },
+        child: content,
+      );
+    }
+
+    final bool isCurrent = modalRoute?.isCurrent ?? true;
+    return Visibility(
+      visible: isCurrent,
+      maintainState: true,
+      maintainAnimation: true,
+      maintainSize: false,
+      child: IgnorePointer(
+        ignoring: !isCurrent,
+        child: content,
+      ),
     );
   }
 }

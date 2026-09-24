@@ -149,6 +149,13 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 		self.delegate = self
 		overrideUserInterfaceStyle = config.isDark ? .dark : .light
 
+		self.customizableViewControllers = []
+		if #available(iOS 18.0, *) {
+			self.mode = .tabBar
+			self.sidebar.isHidden = true
+			self.sidebar.items = []
+		}
+
 		configureAppearance()
 		performFullRebuild()
 
@@ -248,6 +255,11 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 			}
 
 			result(nil)
+		} else if call.method == "setVisibility", let dict = call.arguments as? [String: Any], let visible = dict["visible"] as? Bool {
+			self.view.isHidden = !visible
+			self.view.isUserInteractionEnabled = visible
+			self.tabBar.isUserInteractionEnabled = visible
+			result(nil)
 		} else {
 			result(FlutterMethodNotImplemented)
 		}
@@ -303,7 +315,7 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 			let label = i < config.labels.count ? config.labels[i] : ""
 			let imageData = i < config.itemImagesData.count ? config.itemImagesData[i] : nil
 
-			dummyVC.tabBarItem = UITabBarItem(
+			let item = UITabBarItem(
 				title: label,
 				image: resolveImage(
 					from: imageData,
@@ -312,9 +324,14 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 				),
 				tag: i
 			)
-			dummyVC.tabBarItem.imageInsets = UIEdgeInsets(top: -1, left: 0, bottom: 1, right: 0)
-			dummyVC.tabBarItem.setTitleTextAttributes(normalAttributes, for: .normal)
-			dummyVC.tabBarItem.setTitleTextAttributes(selectedAttributes, for: .selected)
+			item.imageInsets = UIEdgeInsets(top: -1, left: 0, bottom: 1, right: 0)
+			item.setTitleTextAttributes(normalAttributes, for: .normal)
+			item.setTitleTextAttributes(selectedAttributes, for: .selected)
+			if #available(iOS 13.0, *) {
+				item.showsLargeContentViewer = false
+				item.largeContentSizeImage = nil
+			}
+			dummyVC.tabBarItem = item
 			controllers.append(dummyVC)
 		}
 
@@ -329,12 +346,26 @@ class LiquidGlassTabBarController: UITabBarController, UITabBarControllerDelegat
 				fallbackSymbol: config.actionButtonSymbol,
 				targetSize: actionSize
 			)
+			if #available(iOS 13.0, *) {
+				item.showsLargeContentViewer = false
+				item.largeContentSizeImage = nil
+			}
 
 			actionVC.tabBarItem = item
 			controllers.append(actionVC)
 		}
 
 		self.setViewControllers(controllers, animated: false)
+
+		if #available(iOS 13.0, *) {
+			tabBar.interactions.removeAll { $0 is UILargeContentViewerInteraction }
+		}
+		for recognizer in tabBar.gestureRecognizers ?? [] {
+			if recognizer is UILongPressGestureRecognizer {
+				recognizer.isEnabled = false
+			}
+		}
+
 		updateSelectionAndColors()
 		tabBar.setNeedsLayout()
 		tabBar.layoutIfNeeded()

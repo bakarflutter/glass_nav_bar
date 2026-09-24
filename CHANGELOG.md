@@ -1,3 +1,9 @@
+## 1.1.5
+
+- **Route-Aware Navigation Isolation**: Automatically hides and disables touches on the underlying native platform view when navigating to other screens (`Navigator.push`), eliminating touch bleed-through and background gesture conflicts.
+- **Fixed Hold-Tap & Expand Overlays on iOS**: Disabled native `showsLargeContentViewer` and long-press customization/sidebar gestures on iOS `UITabBar` and `UITabBarController`, preventing unwanted floating popup previews when tapping or holding.
+- **Native Visibility Control**: Added `setVisibility` method channel handler to seamlessly toggle iOS `UIView` visibility and user interaction during route transitions.
+
 ## 1.1.4
 
 - **Official Android Platform Support**: Registered native Android plugin support in `pubspec.yaml` with clean Java integration, ensuring full compatibility with modern Android Gradle Plugin (AGP 8/9+) and built-in Kotlin.

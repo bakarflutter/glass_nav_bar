@@ -110,5 +110,63 @@ void main() {
 
       expect(find.text('Custom Fallback Navigation'), findsOneWidget);
     });
+
+    testWidgets('Hides and ignores touches when navigated to another screen', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              return Scaffold(
+                body: Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const Scaffold(
+                            body: Center(child: Text('New Screen')),
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text('Go to Details'),
+                  ),
+                ),
+                bottomNavigationBar: NativeLiquidGlassNavBar(
+                  currentIndex: 0,
+                  onTap: (_) {},
+                  tabs: const [
+                    NativeLiquidGlassNavBarItem.icon(
+                      label: 'Home',
+                      icon: Icons.home_rounded,
+                    ),
+                    NativeLiquidGlassNavBarItem.icon(
+                      label: 'Search',
+                      icon: Icons.search_rounded,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.text('Home'), findsOneWidget);
+
+      // Navigate to another screen
+      await tester.tap(find.text('Go to Details'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('New Screen'), findsOneWidget);
+
+      // Check Visibility of underlying navbar (route is now offstage in navigator)
+      final visibilityFinder = find.byWidgetPredicate(
+        (widget) => widget is Visibility && !widget.visible,
+        skipOffstage: false,
+      );
+      expect(visibilityFinder, findsOneWidget);
+    });
   });
 }

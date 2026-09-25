@@ -504,7 +504,10 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
         : -1.0 + (safeIndex / (totalSlots - 1)) * 2.0;
 
     final double bottomInset = MediaQuery.of(context).padding.bottom;
-    final double bottomMargin = bottomInset > 0 ? 6.0 : 16.0;
+    final bool isPad = MediaQuery.of(context).size.shortestSide >= 600;
+    final double bottomMargin = isPad
+        ? (bottomInset > 0 ? 24.0 : 32.0)
+        : (bottomInset > 0 ? 6.0 : 16.0);
 
     return SafeArea(
       top: false,
@@ -717,8 +720,10 @@ class _NativeLiquidGlassNavBarState extends State<NativeLiquidGlassNavBar> {
           return _buildDefaultFallback(context);
         }
 
+        final bool isPad = MediaQuery.of(context).size.shortestSide >= 600;
         final bottomPadding = MediaQuery.of(context).padding.bottom;
-        final height = 49.0 + bottomPadding;
+        final extraPadBottom = isPad ? (bottomPadding > 0 ? 12.0 : 18.0) : 0.0;
+        final height = 49.0 + bottomPadding + extraPadBottom;
 
         return SizedBox(
           height: height,

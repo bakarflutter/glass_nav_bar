@@ -168,5 +168,40 @@ void main() {
       );
       expect(visibilityFinder, findsOneWidget);
     });
+
+    testWidgets('Applies appropriate bottom margin on tablet/iPad screen sizes', (tester) async {
+      tester.view.physicalSize = const Size(1024, 1366);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            bottomNavigationBar: NativeLiquidGlassNavBar(
+              currentIndex: 0,
+              onTap: (_) {},
+              tabs: const [
+                NativeLiquidGlassNavBarItem.icon(
+                  label: 'Home',
+                  icon: Icons.home_rounded,
+                ),
+                NativeLiquidGlassNavBarItem.icon(
+                  label: 'Profile',
+                  icon: Icons.person_rounded,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.text('Home'), findsOneWidget);
+
+      final containerFinder = find.byWidgetPredicate(
+        (w) => w is Container && w.margin is EdgeInsets && (w.margin as EdgeInsets).bottom >= 16.0,
+      );
+      expect(containerFinder, findsWidgets);
+    });
   });
 }

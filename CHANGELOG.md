@@ -1,3 +1,8 @@
+## 1.1.7
+
+- **Enhanced iPad & Tablet Bottom Spacing**: Improved bottom margin and padding calculations on iPad / tablet devices so the floating liquid glass navigation bar maintains comfortable clearance above the bottom screen edge and home indicator.
+- **Improved iPad Icon Layout & Label Centering**: Prevented iOS 18 from converting native `UITabBar` on iPad into a text-only top pill, preserving full icon support, and vertically centered icon-only tabs when `label` is empty.
+
 ## 1.1.6
 
 - **Fixed Swift Compilation Compatibility**: Corrected iOS 18+ `UITabBarController.Sidebar` and `UILargeContentViewerItem` API usage in `NativeTabBar.swift`, ensuring 100% clean compilation on Xcode across all iOS deployment targets and device configurations.
